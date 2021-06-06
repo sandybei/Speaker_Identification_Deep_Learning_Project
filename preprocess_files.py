@@ -39,12 +39,14 @@ def dataset_to_json(dir, file_name):
 
 # get training set files
 train_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'wav'
-train_files = dataset_to_json(train_dir, 'train_files')
+#train_files = dataset_to_json(train_dir, 'train_files')
+train_files = create_file_dictionary(train_dir)
 
 
 # get test set files
 test_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'vox1_test_wav' + os.sep + 'wav'
-test_files = dataset_to_json(test_dir, 'test_files')
+#test_files = dataset_to_json(test_dir, 'test_files')
+test_files = create_file_dictionary(test_dir)
 
 
 

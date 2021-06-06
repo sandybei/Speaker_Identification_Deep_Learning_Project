@@ -10,4 +10,3 @@ for filename in os.listdir(data_directory):
             print('success')
     else:
         print('Not a zip file.')
-

@@ -20,7 +20,7 @@ def get_speaker_audio(dict):
             signals.append(samples)
         audio_signals_dict[id] = signals
         sampling_rates_dict[id] = sampling_rate
-    return audio_signals_dict
+    return sampling_rates_dict, audio_signals_dict
 
 
 # select 10 speakers for classification
@@ -32,21 +32,16 @@ for id in ids:
 files_num = files_num.sort_values()
 files_num = files_num.iloc[1:10] # [8:18]
 ids = files_num.index
+# dict_keys(['id10650', 'id10310', 'id10327', 'id10684', 'id10614', 'id11229', 'id11074', 'id10784', 'id10958'])
+
 
 # create new dictionaries
 new_train_files = {id: train_files[id] for id in ids}
-print(new_train_files.keys())
 #new_test_files = {id: test_files[id] for id in ids}
 
 # create training set dictionary
-training_set = get_speaker_audio(new_train_files)
+sampling_rates_dict, audio_signals_dict = get_speaker_audio(new_train_files)
 
 # get training set as a list of numpy arrays
-X = []
-for id in training_set.keys():
-    for signals in training_set[id]:
-        for audio_signal in signals:
-            X.append(audio_signal)
-print(type(X))
-print(type(X[0]))
+#print(audio_signals_dict.values())
 
