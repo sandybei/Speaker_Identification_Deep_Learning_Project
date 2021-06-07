@@ -12,6 +12,7 @@ print(metadata.head())
 metadata = metadata[['VoxCeleb1 ID', 'VGGFace1 ID']]
 print(metadata.head())
 
+# load metadata to csv file
 metadata.to_csv(folder_path + 'metadata.csv')
 
 

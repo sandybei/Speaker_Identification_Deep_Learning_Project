@@ -30,6 +30,15 @@ def create_file_dictionary(dir):
     return audio_files_dict
 
 
+def get_audio_files(dictionary):
+    files = []
+    ids = []
+    for id in dictionary.keys():
+        for file in dictionary[id]:
+            files.append(file)
+            ids.append(id)
+    return ids, files
+
 
 # get voxceleb training set files
 train_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'wav'
@@ -52,17 +61,9 @@ labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
 print(labels)
 
 # get audio files of training set
-new_train_files = {id: train_files[id] for id in ids}
-output_file_name = "data" + os.sep + "datasets_files" + os.sep + "dataset_files.json"
+files_with_ids = {id: train_files[id] for id in ids}
+speaker_ids, all_files = get_audio_files(files_with_ids)
+output_file_name = "data" + os.sep + "datasets_files" + os.sep + "all_files.json"
 with open(output_file_name, 'w') as output_file:
-    json.dump(new_train_files, output_file, indent=2) 
+    json.dump(all_files, output_file, indent=2) 
 
-
-# classes of test set not included in training set!
-'''
-# get audio files of test set
-test_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'vox1_test_wav' + os.sep + 'wav'
-test_files = create_file_dictionary(test_dir)
-print(test_files.keys())
-new_test_files = {id: test_files[id] for id in ids}
-'''

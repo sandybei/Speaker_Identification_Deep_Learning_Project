@@ -2,3 +2,4 @@
 
 data/datasets_files/
 data/voxceleb_data/
+cnn.py
