@@ -36,10 +36,6 @@ train_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'wav'
 train_files = create_file_dictionary(train_dir)
 
 # select 10 speakers for classification
-"""
-probably should select speakers by sorting them by their total audio lengths 
-instead of their total number of audio files ?? 
-"""
 files_num = pd.Series(dtype=float)
 new_dict = {}
 ids = train_files.keys()
@@ -62,7 +58,7 @@ with open(output_file_name, 'w') as output_file:
     json.dump(new_train_files, output_file, indent=2) 
 
 
-# have to create the training set according to the classes in the test set
+# classes of test set not included in training set!
 '''
 # get audio files of test set
 test_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'vox1_test_wav' + os.sep + 'wav'
@@ -70,10 +66,3 @@ test_files = create_file_dictionary(test_dir)
 print(test_files.keys())
 new_test_files = {id: test_files[id] for id in ids}
 '''
-
-
-
-
-
-
-
