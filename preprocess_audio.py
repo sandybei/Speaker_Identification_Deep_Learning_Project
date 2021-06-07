@@ -50,37 +50,39 @@ def audio_resize(sample_rate, audio_signal, max_duration):
         audio_signal = np.append(audio_signal, padding)
         signal_length = audio_signal.shape[0] / sample_rate
         print('padded audio duration: ', audio_signal.shape[0] / float(sample_rate))        
-    return audio_signal, sample_rate
+    return audio_signal
 
 
 
 if __name__ == "__main__":
+ 
     
     # all have same sampling rate / same #channels (mono)
-    '''
-    print(sampling_rates_dict)
+    sampling_rates = []
     for key in sampling_rates_dict.keys():
-        print(sampling_rates_dict[key])
-    '''
+        sampling_rates.append(sampling_rates_dict[key])
+    print(sampling_rates)
+    print('All audio files have the same sampling')
     
     # get maximum length of audio signal
     max_length = get_maximum_duration()
     print('The max length of audio files is: ', max_length)
 
     # get an audio file
-    audio = audio_signals_dict['id10650'][0]
+    audio = audio_signals_dict['id10650'][4]
+    print('audio length :', audio.shape[0])
     sample_rate = sampling_rates_dict['id10650']
+    print('sample_rate :', sample_rate)
+
     
     # convert audio to mono (if stereo) 
     mono_signal = stereo_to_mono(audio)
 
     # resize audio
-    resized_audio = audio_resize(sample_rate, mono_signal, max_length)
+    audio = audio_resize(sample_rate, mono_signal, max_length)
 
     # get spectogram of audio in mel-scale
-    
-    
-    
+    spectogram = librosa.feature.melspectrogram(audio, sample_rate, n_fft=2048, hop_length=512, n_mels=128)
 
 
 

@@ -1,3 +1,4 @@
+import librosa
 from preprocess_files import train_files
 import pandas as pd
 from scipy.io import wavfile 
@@ -15,7 +16,7 @@ def get_speaker_audio(dict):
         signals = []
         sampling_rates = []
         for file in dict[id]:            
-            sampling_rate, samples = wavfile.read(file) 
+            samples, sampling_rate = librosa.load(file, sr=44000) 
             sampling_rates.append(sampling_rate)
             signals.append(samples)
         audio_signals_dict[id] = signals
@@ -24,6 +25,10 @@ def get_speaker_audio(dict):
 
 
 # select 10 speakers for classification
+"""
+probably better select speakers by sorting them by their total audio lengths 
+instead of their total number of audio files ?? 
+"""
 files_num = pd.Series(dtype=float)
 new_dict = {}
 ids = train_files.keys()
