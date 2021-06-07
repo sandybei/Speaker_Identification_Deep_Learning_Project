@@ -2,6 +2,14 @@ import os
 import json
 import pandas as pd
 
+def get_metadata():
+    folder_path = 'data' + os.sep + 'metadata' + os.sep 
+    # load file with metadata
+    metadata = pd.read_csv(folder_path + 'vox1_meta.csv', sep='\t')
+    # keep id and name columns
+    metadata = metadata[['VoxCeleb1 ID', 'VGGFace1 ID']]
+    return metadata
+
 
 def map_files_to_labels(dir):
     dir_split = dir.split(os.sep)
@@ -55,8 +63,7 @@ files_num = files_num.iloc[1:10] # [8:18]
 ids = files_num.index
 
 # get classification lables
-metadata_path = 'data' + os.sep + 'metadata' + os.sep + 'metadata.csv'
-metadata = pd.read_csv(metadata_path, index_col=[0])
+metadata = get_metadata()
 labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
 print(labels)
 
