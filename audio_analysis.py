@@ -51,7 +51,23 @@ def audio_resize(sample_rate, audio_signal, max_duration):
         #print('padded audio length: ', padded_length.shape[0] / float(sample_rate))      
     return audio_signal
 
- 
+def preprocess(file):
+    # load audio file
+
+    audio, sample_rate = librosa.load(file, sr=44000)
+
+    # convert audio to mono (if stereo) 
+    mono_signal = stereo_to_mono(audio)
+
+    # resize audio 
+    audio = audio_resize(sample_rate, mono_signal, 10)
+
+    # get spectogram of audio in mel-scale
+    spectogram = librosa.feature.melspectrogram(audio, sample_rate, n_fft=2048, hop_length=512, n_mels=128)
+    #librosa.display.specshow(librosa.power_to_db(spectogram, ref=np.max))
+    #plt.show()
+
+    return spectogram
 
 if __name__ == "__main__": 
     '''
