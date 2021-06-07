@@ -1,5 +1,6 @@
 import os
 import json
+import pandas as pd
 
 
 def map_files_to_labels(dir):
@@ -29,24 +30,48 @@ def create_file_dictionary(dir):
     return audio_files_dict
 
 
-def dataset_to_json(dir, file_name):
-    files_dictionary = create_file_dictionary(dir)
-    output_file_name = "data" + os.sep + "datasets_files" + os.sep + f"{file_name}.json"
-    with open(output_file_name, 'w') as output_file:
-        json.dump(files_dictionary, output_file, indent=4)   
-    return files_dictionary
 
-
-# get training set files
+# get voxceleb training set files
 train_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'wav'
-#train_files = dataset_to_json(train_dir, 'train_files')
 train_files = create_file_dictionary(train_dir)
 
+# select 10 speakers for classification
+"""
+probably should select speakers by sorting them by their total audio lengths 
+instead of their total number of audio files ?? 
+"""
+files_num = pd.Series(dtype=float)
+new_dict = {}
+ids = train_files.keys()
+for id in ids:
+    files_num[id] = len(train_files[id])
+files_num = files_num.sort_values()
+files_num = files_num.iloc[1:10] # [8:18]
+ids = files_num.index
 
-# get test set files
+# get classification lables
+metadata_path = 'data' + os.sep + 'metadata' + os.sep + 'metadata.csv'
+metadata = pd.read_csv(metadata_path, index_col=[0])
+labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
+print(labels)
+
+# get audio files of training set
+new_train_files = {id: train_files[id] for id in ids}
+output_file_name = "data" + os.sep + "datasets_files" + os.sep + "training_set_files.json"
+with open(output_file_name, 'w') as output_file:
+    json.dump(new_train_files, output_file, indent=2) 
+
+
+# have to create the training set according to the classes in the test set
+'''
+# get audio files of test set
 test_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'vox1_test_wav' + os.sep + 'wav'
-#test_files = dataset_to_json(test_dir, 'test_files')
 test_files = create_file_dictionary(test_dir)
+print(test_files.keys())
+new_test_files = {id: test_files[id] for id in ids}
+'''
+
+
 
 
 
