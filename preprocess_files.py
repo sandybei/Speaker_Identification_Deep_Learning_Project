@@ -53,7 +53,7 @@ print(labels)
 
 # get audio files of training set
 new_train_files = {id: train_files[id] for id in ids}
-output_file_name = "data" + os.sep + "datasets_files" + os.sep + "training_set_files.json"
+output_file_name = "data" + os.sep + "datasets_files" + os.sep + "dataset_files.json"
 with open(output_file_name, 'w') as output_file:
     json.dump(new_train_files, output_file, indent=2) 
 

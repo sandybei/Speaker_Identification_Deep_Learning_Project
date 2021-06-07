@@ -26,6 +26,4 @@ def get_speaker_audio(dict):
 # create training set dictionary
 sampling_rates_dict, audio_signals_dict = get_speaker_audio(new_train_files)
 
-# get training set as a list of numpy arrays
-#print(audio_signals_dict.values())
 

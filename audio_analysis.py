@@ -54,8 +54,7 @@ def audio_resize(sample_rate, audio_signal, max_duration):
 
 
 if __name__ == "__main__":
- 
-    
+        
     # all have same sampling rate / same #channels (mono)
     sampling_rates = []
     for key in sampling_rates_dict.keys():
@@ -72,7 +71,6 @@ if __name__ == "__main__":
     print('audio length :', audio.shape[0])
     sample_rate = sampling_rates_dict['id10650']
     print('sample_rate :', sample_rate)
-
     
     # convert audio to mono (if stereo) 
     mono_signal = stereo_to_mono(audio)
