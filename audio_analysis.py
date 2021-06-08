@@ -1,9 +1,11 @@
+from librosa.util import files
 import matplotlib.pyplot as plt
 import numpy as np
 import librosa
 import librosa.display
-from pyAudioAnalysis.audioBasicIO import stereo_to_mono, read_audio_file
+from pyAudioAnalysis.audioBasicIO import stereo_to_mono
 import matplotlib.pyplot as plt
+from preprocess_files import all_files
 
 
 def get_speaker_audio(dict):
@@ -51,9 +53,18 @@ def audio_resize(sample_rate, audio_signal, max_duration):
         #print('padded audio length: ', padded_length.shape[0] / float(sample_rate))      
     return audio_signal
 
-def preprocess(file):
-    # load audio file
 
+def spectrogram_image(spectrogram):
+    fig = plt.figure()
+    librosa.display.specshow(librosa.power_to_db(spectrogram, ref=np.max))
+    return fig
+    
+
+def preprocess(file):
+    """
+    takes an audio file and returns a plot of the audio mel spectrogram 
+    """
+    # load audio file
     audio, sample_rate = librosa.load(file, sr=44000)
 
     # convert audio to mono (if stereo) 
@@ -62,19 +73,24 @@ def preprocess(file):
     # resize audio 
     audio = audio_resize(sample_rate, mono_signal, 10)
 
-    # get spectogram of audio in mel-scale
-    spectogram = librosa.feature.melspectrogram(audio, sample_rate, n_fft=2048, hop_length=512, n_mels=128)
-    #librosa.display.specshow(librosa.power_to_db(spectogram, ref=np.max))
-    #plt.show()
+    # get spectrogram as numpy array
+    spectrogram = librosa.feature.melspectrogram(audio, sample_rate, n_fft=2048, hop_length=512, n_mels=128)
 
-    return spectogram
+    # get plot figure of spectrogram
+    figure = spectrogram_image(spectrogram)
 
-if __name__ == "__main__": 
-    '''
-    #create training set dictionary
-    audio_signals = get_speaker_audio(files_with_ids)
-    # get signal lengths in sec
-    durations = min_max_duration(audio_signals, 44000)
-    print(durations)
-    '''
+    return figure
+
+
+file = all_files[0]
+image = preprocess(file) 
+plt.savefig('image_2.png', bbox_inches='tight', pad_inches=0, transparent=True)
+
+'''
+#create training set dictionary
+audio_signals = get_speaker_audio(files_dict)
+# get signal lengths in sec
+durations = min_max_duration(audio_signals, 44000)
+print(durations)
+'''
     

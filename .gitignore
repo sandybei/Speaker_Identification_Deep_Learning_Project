@@ -1,4 +1,5 @@
 # files to ignore
 
 data/voxceleb_data/
+data/images/
 cnn.py
