@@ -5,18 +5,18 @@ import librosa
 import librosa.display
 from pyAudioAnalysis.audioBasicIO import stereo_to_mono
 import matplotlib.pyplot as plt
-from preprocess_files import all_files
+from preprocess_files import dev_files
 
 
-def get_speaker_audio(dict):
+def get_speaker_audio(dictionary):
     """
     :param id: the id of the speaker
     :return: a dictionary of sampling frequencies and signals of audio files
     """  
     signals = []
-    for id in dict.keys():        
-        for file in dict[id]:            
-            samples, sampling_rate = librosa.load(file, sr=44000) 
+    for id in dictionary.keys():        
+        for file in dictionary[id]:            
+            samples, _ = librosa.load(file, sr=44000) 
             signals.append(samples)
     return signals
 
@@ -66,31 +66,32 @@ def preprocess(file):
     """
     # load audio file
     audio, sample_rate = librosa.load(file, sr=44000)
-
     # convert audio to mono (if stereo) 
     mono_signal = stereo_to_mono(audio)
-
     # resize audio 
     audio = audio_resize(sample_rate, mono_signal, 10)
-
     # get spectrogram as numpy array
     spectrogram = librosa.feature.melspectrogram(audio, sample_rate, n_fft=2048, hop_length=512, n_mels=128)
-
     # get plot figure of spectrogram
     figure = spectrogram_image(spectrogram)
-
     return figure
 
-
-file = all_files[0]
-image = preprocess(file) 
-plt.savefig('image_2.png', bbox_inches='tight', pad_inches=0, transparent=True)
-
 '''
-#create training set dictionary
-audio_signals = get_speaker_audio(files_dict)
-# get signal lengths in sec
-durations = min_max_duration(audio_signals, 44000)
-print(durations)
+if __name__ == "__main__":
+    #create training set dictionary
+    #audio_signals = get_speaker_audio(files_dict)
+    # get signal lengths in sec
+    signals = []
+    for id in dev_files.keys():        
+        for file in dev_files[id]:            
+            samples, sample_rate = librosa.load(file, sr=44000) 
+            durations = []
+            #for sig in samples:
+            duration = samples.shape[0] / float(sample_rate)
+            durations.append(duration)
+    durations = np.asarray(durations)
+    #durations = min_max_duration(signals, 44000)
+    print(np.min(durations))
+    print(np.max(durations))
 '''
     

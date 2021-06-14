@@ -38,7 +38,7 @@ def create_file_dictionary(dir):
         files_dict[label] = audio_files
     return files_dict
 
-
+'''
 def get_audio_files(dictionary):
     files = []
     ids = []
@@ -47,47 +47,51 @@ def get_audio_files(dictionary):
             files.append(file)
             ids.append(id)
     return ids, files
+'''
 
+# get voxceleb dev files
+dev_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'wav'
+dev_files = create_file_dictionary(dev_dir)
 
-# get voxceleb training set files
-train_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'wav'
-train_files = create_file_dictionary(train_dir)
-
-# select 10 speakers for classification
+# select 10 speakers with the least audio files for classification
 files_num = pd.Series(dtype=float)
 new_dict = {}
-ids = train_files.keys()
+ids = dev_files.keys()
 for id in ids:
-    files_num[id] = len(train_files[id])
+    files_num[id] = len(dev_files[id])
 files_num = files_num.sort_values()
-#print(files_num.head(50))
-files_num = files_num.iloc[:10]
+print(files_num.head(50))
+files_num = files_num.iloc[:11]
 print(files_num)
 
+# get number of files for training + test set for a 80/20 split
 total = files_num.sum()
 num_test = total * 20 / 100
 files_per_id = round(num_test / files_num.shape[0])
 print('Number of files to use for test set for each speaker: ', files_per_id)
-
-
 files_num = files_num.iloc[:10] 
 ids = files_num.index
+train_files = {}
+test_files = {}
+for id in ids:
+    train_files[id] = dev_files[id][9:]
+    test_files[id] = dev_files[id][:9]
+
+print(test_files)
 
 # get classification lables
-metadata = get_metadata()
-labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
-print(labels)
+# metadata = get_metadata()
+# labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
+# print(labels)
 
+
+'''
 # get audio files of training set
 files_dict = {id: train_files[id] for id in ids}
 speaker_ids, all_files = get_audio_files(files_dict)
 output_file_name = "data" + os.sep + "datasets_files" + os.sep + "all_files.json"
 with open(output_file_name, 'w') as output_file:
     json.dump(all_files, output_file, indent=2) 
+'''
 
-'''
-labels = [int(id[2:]) for id in speaker_ids]
-labels = np.asarray(labels)
-labels = labels.reshape(-1, 1)
-'''
 

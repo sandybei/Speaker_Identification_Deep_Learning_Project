@@ -1,5 +1,7 @@
-# files to ignore
+# files and directories to ignore
 
 data/voxceleb_data/
 data/images/
+data/train
+data/test
 cnn.py
