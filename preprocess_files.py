@@ -39,7 +39,7 @@ def create_file_dictionary(dir):
     return files_dict
 
 
-def get_audio_files(dictionary):
+def get_all_files(dictionary):
     files = []
     ids = []
     for id in dictionary.keys():
@@ -87,8 +87,8 @@ print(labels)
 
 # get audio files of training set
 files_dict = {id: train_files[id] for id in ids}
-speaker_ids, all_files = get_audio_files(files_dict)
-output_file_name = "data" + os.sep + "datasets_files" + os.sep + "all_files.json"
+speaker_ids, all_files = get_all_files(files_dict)
+output_file_name = "data" + os.sep + "all_files.json"
 with open(output_file_name, 'w') as output_file:
     json.dump(all_files, output_file, indent=2) 
 

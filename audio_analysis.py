@@ -1,10 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import librosa
-import librosa.display
 from pyAudioAnalysis.audioBasicIO import stereo_to_mono, read_audio_file
 import matplotlib.pyplot as plt
-from preprocess_files import dev_files, all_files
+from preprocess_files import all_files
 import librosa.display
 import matplotlib
 
@@ -62,12 +61,6 @@ def preprocess(file):
     processed_spec = pad_spectrogram(spec, best_width)
     fig = plt.figure()
     librosa.display.specshow(librosa.power_to_db(processed_spec, ref=np.max))
-    #canvas = plt.gcf().canvas
-    #agg = canvas.switch_backends(FigureCanvasAgg)
-    #agg.draw()
-    #X = np.asarray(agg.buffer_rgba())
-    #im = Image.fromarray(X)
-    #plt.close(fig)
     return fig
 
 # get best width for spectrogram images

@@ -3,9 +3,8 @@ from audio_analysis import preprocess
 import os
 import matplotlib.pyplot as plt
 import matplotlib
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 
-matplotlib.use('AGG')
+matplotlib.use('TkAgg')
 
 def create_directory(folder, files_dict):
     os.mkdir(folder)
