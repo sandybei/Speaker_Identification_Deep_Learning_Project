@@ -7,3 +7,4 @@ data/test
 cnn.py
 functions.py
 .vscode/
+__pycache__/
