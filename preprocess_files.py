@@ -59,30 +59,30 @@ new_dict = {}
 ids = dev_files.keys()
 for id in ids:
     files_num[id] = len(dev_files[id])
-files_num = files_num.sort_values()
-#print(files_num.head(50))
-files_num = files_num.iloc[:11]
-#print(files_num)
+files_num = files_num.sort_values(ascending=False)
+print(files_num.head(30))
+files_num = files_num.iloc[4:14]
+print(files_num)
 
 # get number of files for training + test set for a 80/20 split
 total = files_num.sum()
+print(f'Total number of audio files: {total}')
 num_test = total * 20 / 100
 files_per_id = round(num_test / files_num.shape[0])
-#print('Number of files to use for test set for each speaker: ', files_per_id)
-files_num = files_num.iloc[:10] 
+print('Number of files to use for test set for each speaker: ', files_per_id)
+files_num = files_num.iloc[:files_per_id] 
 ids = files_num.index
 train_files = {}
 test_files = {}
 for id in ids:
-    train_files[id] = dev_files[id][9:]
-    test_files[id] = dev_files[id][:9]
+    train_files[id] = dev_files[id][files_per_id:]
+    test_files[id] = dev_files[id][:files_per_id]
 
 
 # get classification lables
 metadata = get_metadata()
 labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
-#print(labels)
-
+print(labels)
 
 
 # get audio files of training set

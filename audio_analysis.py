@@ -6,19 +6,11 @@ from pyAudioAnalysis.audioBasicIO import stereo_to_mono, read_audio_file
 import matplotlib.pyplot as plt
 from preprocess_files import dev_files, all_files
 import librosa.display
+import matplotlib
+
+matplotlib.use('TkAgg')
 
 
-def min_max_duration(signals, sample_rate):
-    """
-    return maximum duration in seconds of all audio files in the training set
-    to get the duration in seconds, we divide the number of samples by sampling rate
-    """
-    durations = []
-    for sig in signals:
-        duration = sig.shape[0] / float(sample_rate)
-        durations.append(duration)
-    durations = np.asarray(durations)
-    return durations
     
 
 def get_spectrogram(file):
@@ -31,10 +23,7 @@ def get_spectrogram(file):
     mono_signal = stereo_to_mono(samples)
     mono_signal = mono_signal.astype(np.float32)
     # get spectrogram as numpy array
-    spectrogram = librosa.feature.melspectrogram(mono_signal, sample_rate, n_fft=2048, hop_length=512, n_mels=128) # larger hop length 2048
-    # get plot figure of spectrogram
-    # figure = get_image(spectrogram)
-    # add padding to images
+    spectrogram = librosa.feature.melspectrogram(mono_signal, sample_rate, n_fft=2048, hop_length=2048, n_mels=128) # larger hop length 2048
     return spectrogram
 
 
@@ -49,6 +38,9 @@ def optimal_image_width(plotShow):
     if plotShow:
         plt.hist(img_widths)
         plt.show()
+    print('Mininum image width: ', np.min(img_widths))
+    print('Maximum image width : ', np.max(img_widths))
+    print('95-Percentile image width: ', best_width)
     return best_width
 
 
@@ -67,18 +59,18 @@ def pad_spectrogram(spec, best_width):
     return spec
 
 
-def get_image(spectrogram):
-    fig = plt.figure()
-    librosa.display.specshow(librosa.power_to_db(spectrogram, ref=np.max))
-    return fig
-
 def preprocess(file):
     spec = get_spectrogram(file)
     processed_spec = pad_spectrogram(spec, best_width)
-    fig = get_image(processed_spec)
+    fig = plt.figure()
+    librosa.display.specshow(librosa.power_to_db(processed_spec, ref=np.max))
+    #canvas = plt.gcf().canvas
+    #agg = canvas.switch_backends(FigureCanvasAgg)
+    #agg.draw()
+    #X = np.asarray(agg.buffer_rgba())
+    #im = Image.fromarray(X)
+    #plt.close(fig)
     return fig
 
-# best width for spectrogram images
+# get best width for spectrogram images
 best_width = optimal_image_width(False)
-#spec = get_spectrogram(dev_files['id11229'][2])
-#spec = pad_spectrogram(spec, best_width)
