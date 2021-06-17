@@ -11,8 +11,6 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 
-    
-
 def get_spectrogram(file):
     """
     takes an audio file and returns a numpy array of the spectrogram 
