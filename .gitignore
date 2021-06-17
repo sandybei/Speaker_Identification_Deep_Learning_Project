@@ -5,3 +5,4 @@ data/images/
 data/train
 data/test
 cnn.py
+functions.py

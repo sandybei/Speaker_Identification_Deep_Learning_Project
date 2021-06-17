@@ -1,5 +1,5 @@
 from preprocess_files import train_files, test_files
-from audio_analysis import preprocess
+from audio_analysis import *
 import os
 import matplotlib.pyplot as plt
 
@@ -12,7 +12,7 @@ def create_directory(folder, files_dict):
         for i, file in enumerate(files_dict[id]): 
             fig = preprocess(file)
             file_name = os.path.join(subfolder, str(i) + '.png')
-            plt.savefig(file_name, bbox_inches='tight', pad_inches=0, transparent=True)
+            plt.savefig(file_name, bbox_inches='tight', pad_inches=0)
             plt.close(fig)
     return
 
@@ -20,6 +20,9 @@ def create_directory(folder, files_dict):
 # create directory for spectrogram images of each speaker
 dir = os.path.join('data', 'images')
 os.mkdir(dir)
+
+# get best width for spectrogram images
+best_width = optimal_image_width(False)
 
 # create directory for training set
 folder = os.path.join(dir, 'train')
@@ -30,3 +33,4 @@ folder = os.path.join(dir, 'test')
 create_directory(folder, test_files)
 
 
+#spec = get_spectrogram(dev_files['id11229'][2])
