@@ -35,10 +35,26 @@ def optimal_image_width(plotShow):
     if plotShow:
         plt.hist(img_widths)
         plt.show()
-    print('Mininum image width: ', np.min(img_widths))
-    print('Maximum image width : ', np.max(img_widths))
-    print('95-Percentile image width: ', best_width)
+    print('\n        Spectrogram Images Statistics      ')
+    print('-------------------------------------------')
+    print('Mininum width:       ', np.min(img_widths))
+    print('Maximum width :      ', np.max(img_widths))
+    print('95-Percentile width: ', best_width)
     return best_width
+
+
+def get_sample_rates():
+    sample_rates = []
+    for file in all_files:                   
+        sample_rate, _ = read_audio_file(file) 
+        sample_rates.append(sample_rate)
+    sample_rates = np.asarray(sample_rates)
+    sample_rates = np.unique(sample_rates)
+    if len(sample_rates) == 1:
+        print(f'\nAll audios have the same sample rate: {sample_rates[0]} kHz')
+    else:
+        print("Audios don't have the same sample rates")
+    return sample_rates
 
 
 def pad_spectrogram(spec, best_width):
@@ -63,5 +79,9 @@ def preprocess(file):
     librosa.display.specshow(librosa.power_to_db(processed_spec, ref=np.max))
     return fig
 
+
+# check if all audio files have the same sample rates
+sample_rates = get_sample_rates()
 # get best width for spectrogram images
 best_width = optimal_image_width(False)
+

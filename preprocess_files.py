@@ -1,7 +1,7 @@
 import os
 import json
 import pandas as pd
-import numpy as np
+
 
 def get_metadata():
     folder_path = 'data' + os.sep + 'metadata' + os.sep 
