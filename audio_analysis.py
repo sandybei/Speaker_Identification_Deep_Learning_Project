@@ -12,7 +12,7 @@ matplotlib.use('TkAgg')
 
 def get_spectrogram(file):
     """
-    takes an audio file and returns a numpy array of the spectrogram 
+    takes an audio file and returns the spectrogram as numpy array 
     """
     # load audio file
     sample_rate, samples = read_audio_file(file)
@@ -25,6 +25,9 @@ def get_spectrogram(file):
 
 
 def optimal_image_width(plotShow):
+    """
+    finds the 95th percentile of all spectrogram images widths
+    """
     img_widths = []
     for file in all_files:                   
         spec = get_spectrogram(file) 
@@ -44,6 +47,9 @@ def optimal_image_width(plotShow):
 
 
 def get_sample_rates():
+    """
+    returns the unique sample rates of all audio files
+    """
     sample_rates = []
     for file in all_files:                   
         sample_rate, _ = read_audio_file(file) 
@@ -53,15 +59,19 @@ def get_sample_rates():
     if len(sample_rates) == 1:
         print(f'\nAll audios have the same sample rate: {sample_rates[0]} kHz')
     else:
-        print("Audios don't have the same sample rates")
-    return sample_rates
+        print("Audios have different sample rates")
+    return 
 
 
 def pad_spectrogram(spec, best_width):
+    """
+    crops spectrogram image to have width equal to the 95th percentile of all widths and
+    pads spectrogram image with zeros to have width equal to the 95th percentile of all widths
+    """
     img_length = spec.shape[0] 
     img_width = spec.shape[1]
     max_width = best_width
-    # trim image if length larger than best width
+    # crop image if length larger than best width
     if img_width > max_width:
         spec = spec[:, :max_width]  
     # add padding at the end of the image if width less than best width
@@ -73,11 +83,15 @@ def pad_spectrogram(spec, best_width):
 
 
 def preprocess(file):
+    """
+    gets audio file and returns a plot figure of the mel spectrogram
+    """
     spec = get_spectrogram(file)
     processed_spec = pad_spectrogram(spec, best_width)
     fig = plt.figure()
     librosa.display.specshow(librosa.power_to_db(processed_spec, ref=np.max))
     return fig
+
 
 
 # check if all audio files have the same sample rates
