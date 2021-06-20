@@ -9,23 +9,6 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 
-def get_spectrogram(file):
-    """
-    takes an audio file and returns its spectrogram 
-
-    :param file: filepath of an audio file
-    :return: spectrogram of the audio wave as a numpy array
-    """
-    # load audio file
-    sample_rate, samples = read_audio_file(file)
-    # convert audio to mono (if stereo) 
-    mono_signal = stereo_to_mono(samples)
-    mono_signal = mono_signal.astype(np.float32)
-    # get spectrogram as numpy array
-    spectrogram = librosa.feature.melspectrogram(mono_signal, sample_rate, n_fft=2048, hop_length=2048, n_mels=128) # larger hop length 2048
-    return spectrogram
-
-
 def optimal_image_width():
     """
     finds the optimal width of spectrogram images in pixels
@@ -77,11 +60,30 @@ def get_sample_rates():
     return sample_rate
 
 
+def get_spectrogram(file):
+    """
+    takes an audio file and returns its spectrogram 
+
+    :param file: filepath of an audio file
+    :return: spectrogram of the audio wave as a numpy array
+    """
+    # load audio file
+    sample_rate, samples = read_audio_file(file)
+    # convert audio to mono (if stereo) 
+    mono_signal = stereo_to_mono(samples)
+    mono_signal = mono_signal.astype(np.float32)
+    # get spectrogram as numpy array
+    spectrogram = librosa.feature.melspectrogram(mono_signal, sample_rate, n_fft=2048, hop_length=2048, n_mels=128) # larger hop length 2048
+    return spectrogram
+
+
+
 def pad_or_crop_spectrogram(spec, best_width):
     """
     - crops spectrogram image to have width equal to the 95th percentile of all widths if it has less
     - pads spectrogram image with zeros to have width equal to the 95th percentile of all widths if it has more
 
+    :param spec: spectrogram as a numpy array
     :return: padded or cropped spectrogram
     """
     img_length = spec.shape[0] 
@@ -101,7 +103,7 @@ def pad_or_crop_spectrogram(spec, best_width):
 def preprocess(file):
     """
     gets audio file and returns its mel spectrogram
-    
+
     :param file: filepathof an audio file
     :return: plot figure of the mel spectrogram of an audio wave
 
