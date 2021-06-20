@@ -20,15 +20,11 @@ def create_directory(folder, files_dict):
     return
 
 
-# create directory for spectrogram images of each speaker
-dir = os.path.join('data', 'images')
-os.mkdir(dir)
-
 # create directory for training set
-folder = os.path.join(dir, 'train')
+folder = os.path.join('data', 'train')
 create_directory(folder, train_files)
 
 # create directory for test set
-folder = os.path.join(dir, 'test')
+folder = os.path.join('data', 'test')
 create_directory(folder, test_files)
 

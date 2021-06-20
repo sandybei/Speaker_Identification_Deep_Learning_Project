@@ -4,6 +4,9 @@ import pandas as pd
 
 
 def get_metadata():
+    """
+    reads voxceleb metadata file and keeps speakers names and ids
+    """
     folder_path = 'data' + os.sep + 'metadata' + os.sep 
     # load file with metadata
     metadata = pd.read_csv(folder_path + 'vox1_meta.csv', sep='\t')
@@ -39,39 +42,35 @@ def create_file_dictionary(dir):
     return files_dict
 
 
-def get_all_files(dictionary):
-    files = []
-    ids = []
-    for id in dictionary.keys():
-        for file in dictionary[id]:
-            files.append(file)
-            ids.append(id)
-    return ids, files
-
-
 # get voxceleb dev files
 dev_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'wav'
 dev_files = create_file_dictionary(dev_dir)
 
-# select 10 speakers with the least audio files for classification
-files_num = pd.Series(dtype=float)
+# create series with the number of audio files per speaker id
+files_sum = pd.Series(dtype=float)
 new_dict = {}
 ids = dev_files.keys()
 for id in ids:
-    files_num[id] = len(dev_files[id])
-files_num = files_num.sort_values(ascending=False)
-print(files_num.head(30))
-files_num = files_num.iloc[4:14]
-print(files_num)
+    files_sum[id] = len(dev_files[id])
+# select 10 speakers for classification
+files_sum = files_sum.sort_values(ascending=False)
+print(files_sum.head(30)) 
+files_sum = files_sum.iloc[4:14] 
 
-# get number of files for training + test set for a 80/20 split
-total = files_num.sum()
-print(f'Total number of audio files: {total}')
-num_test = total * 20 / 100
-files_per_id = round(num_test / files_num.shape[0])
-print('Number of files to use for test set for each speaker: ', files_per_id)
-files_num = files_num.iloc[:files_per_id] 
-ids = files_num.index
+# get number of files for training and test set for a 80/20 split
+total_files = files_sum.sum()
+print('\n            Files to be used for classification          ')
+print('---------------------------------------------------------')
+print(f'Total number of audio files: {total_files}')
+test_files_num = int(total_files * 20 / 100)
+train_files_num = int(total_files - test_files_num)
+files_per_id = round(test_files_num / files_sum.shape[0])
+print('Number of files to be used for training: ', train_files_num)
+print('Number of files to be used for test: ', test_files_num)
+print('Number of files for each speaker for test set: ', files_per_id)
+files_sum = files_sum.iloc[:files_per_id] 
+ids = files_sum.index
+# get training and test set files
 train_files = {}
 test_files = {}
 for id in ids:
@@ -79,18 +78,17 @@ for id in ids:
     test_files[id] = dev_files[id][:files_per_id]
 
 
+# get all audio files to be used for training / test
+files_dict = {id: dev_files[id] for id in ids}
+#with open(output_file_name, 'w') as output_file:
+#    json.dump(all_files, output_file, indent=2) 
+
+
 # get classification lables
 metadata = get_metadata()
 labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
+labels.reset_index(drop=True, inplace=True)
+print('\n  Speakers to be used for classification')
+print('------------------------------------------')
 print(labels)
-
-
-# get audio files of training set
-files_dict = {id: train_files[id] for id in ids}
-speaker_ids, all_files = get_all_files(files_dict)
-output_file_name = "data" + os.sep + "all_files.json"
-with open(output_file_name, 'w') as output_file:
-    json.dump(all_files, output_file, indent=2) 
-
-
 
