@@ -59,15 +59,9 @@ files_sum = files_sum.iloc[4:14]
 
 # get number of files for training and test set for a 80/20 split
 total_files = files_sum.sum()
-print('\n            Files to be used for classification          ')
-print('---------------------------------------------------------')
-print(f'Total number of audio files: {total_files}')
 test_files_num = int(total_files * 20 / 100)
 train_files_num = int(total_files - test_files_num)
 files_per_id = round(test_files_num / files_sum.shape[0])
-print('Number of files to be used for training: ', train_files_num)
-print('Number of files to be used for test: ', test_files_num)
-print('Number of files for each speaker for test set: ', files_per_id)
 files_sum = files_sum.iloc[:files_per_id] 
 ids = files_sum.index
 # get training and test set files
@@ -76,6 +70,14 @@ test_files = {}
 for id in ids:
     train_files[id] = dev_files[id][files_per_id:]
     test_files[id] = dev_files[id][:files_per_id]
+    
+# print file info
+print('\n            Files to be used for classification          ')
+print('---------------------------------------------------------')
+print(f'Total number of audio files: {total_files}')
+print('Number of files to be used for training: ', train_files_num)
+print('Number of files to be used for test: ', test_files_num)
+print('Number of files for each speaker for test set: ', files_per_id)
 
 
 # get all audio files to be used for training / test
