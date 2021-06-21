@@ -90,7 +90,7 @@ def pad_or_crop_spectrogram(spec, best_width):
     """
     img_width = spec.shape[1]
     max_width = best_width
-    # crop image if length larger than best width
+    # crop image if width larger than best width
     if img_width > max_width:
         spec = spec[:, :max_width]  
     # add padding at the start and at the end of the image if width less than best width
@@ -114,6 +114,7 @@ def preprocess(file):
     spec = audio_to_spectrogram(file)
     # resize spectrogram
     processed_spec = pad_or_crop_spectrogram(spec, best_width)
+    print('shape: ,', processed_spec.shape)
     # get plot figure of mel spectrogram 
     fig = plt.figure()
     librosa.display.specshow(librosa.power_to_db(processed_spec, ref=np.max))
@@ -125,3 +126,6 @@ sample_rates = get_sample_rates()
 # get best width for spectrogram images
 best_width = optimal_image_width()
 print('The optimal image width of spectrograms is: ', best_width)
+
+preprocess(files_dict['id11211'][0])
+plt.show()

@@ -4,7 +4,7 @@ data/voxceleb_data/
 data/test
 data/train
 data/val
-cnn.py
 functions.py
 .vscode/
 __pycache__/
+predict.py

@@ -86,7 +86,7 @@ print('Number of files to be used for test: ', test_files_num)
 print('Number of files for each speaker for test set: ', files_per_id)
 
 
-# get all audio files to be used for training / test
+# get all audio files to be used 
 files_dict = {id: dev_files[id] for id in ids}
 
 # get training, validation and test set files
@@ -95,7 +95,7 @@ val_files = {}
 test_files = {}
 for id in ids:
     train_files[id] = dev_files[id][files_per_id*2:]
-    val_files[id] = dev_files[id][:files_per_id]
+    val_files[id] = dev_files[id][:files_per_id-1]
     test_files[id] = dev_files[id][files_per_id:files_per_id*2]
 
 
