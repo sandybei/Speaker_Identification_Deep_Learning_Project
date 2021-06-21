@@ -127,5 +127,4 @@ sample_rates = get_sample_rates()
 best_width = optimal_image_width()
 print('The optimal image width of spectrograms is: ', best_width)
 
-preprocess(files_dict['id11211'][0])
-plt.show()
+

@@ -74,7 +74,7 @@ model.compile(
 print(model.summary())
 
 # fit model
-epochs=50
+epochs=20
 callback = EarlyStopping(monitor='loss', patience=5)
 history = model.fit(
   train_ds,
@@ -85,5 +85,6 @@ history = model.fit(
 
 # plot training and validation loss
 history_frame = pd.DataFrame(history.history)
-history_frame.loc[:, ['loss', 'val_loss']].plot()
+history_frame.loc[:, ['loss', 'val_loss']].plot(title='Training vs Validation Loss')
+plt.xlabel('Epochs')
 plt.show()
