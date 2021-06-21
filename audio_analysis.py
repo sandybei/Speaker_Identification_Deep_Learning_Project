@@ -1,12 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import librosa
+from numpy.lib.arraypad import pad
 from pyAudioAnalysis.audioBasicIO import stereo_to_mono, read_audio_file
 from preprocess_files import files_dict
 import librosa.display
-import matplotlib
-
-matplotlib.use('TkAgg')
 
 
 def get_sample_rates():
@@ -70,15 +68,17 @@ def optimal_image_width():
     plt.axvline(x=best_width, color='r', linestyle='--', label='95th-percentile')
     plt.legend()
     plt.show()
-
+    plt.close()
+    
     # print spctrogram images info
     print('\n     Spectrogram Images Statistics  ')
     print('--------------------------------------')
     print('Mininum width:    ', np.min(img_widths))
     print('Maximum width :   ', np.max(img_widths))
     print('95th-Percentile:  ', best_width)
+    
     return best_width
-
+    
 
 def pad_or_crop_spectrogram(spec, best_width):
     """
@@ -88,7 +88,6 @@ def pad_or_crop_spectrogram(spec, best_width):
     :param spec: spectrogram as a numpy array
     :return: padded or cropped spectrogram
     """
-    img_length = spec.shape[0] 
     img_width = spec.shape[1]
     max_width = best_width
     # crop image if length larger than best width
@@ -98,11 +97,8 @@ def pad_or_crop_spectrogram(spec, best_width):
     elif img_width < max_width:
         pad_width = max_width - img_width
         left_pad_width = int(pad_width / 2)
-        right_pad_width = np.abs(img_width - pad_width)
-        left_pad = np.zeros((img_length, left_pad_width))
-        right_pad = np.zeros((img_length, right_pad_width))
-        spec = np.column_stack((left_pad, spec))
-        spec = np.column_stack((spec, right_pad))
+        right_pad_width = np.abs(pad_width - left_pad_width)
+        spec = np.pad(spec, ((0,0), (left_pad_width,right_pad_width)))
     return spec
 
 
@@ -121,7 +117,6 @@ def preprocess(file):
     # get plot figure of mel spectrogram 
     fig = plt.figure()
     librosa.display.specshow(librosa.power_to_db(processed_spec, ref=np.max))
-    plt.show()
     return fig
 
 
@@ -129,9 +124,4 @@ def preprocess(file):
 sample_rates = get_sample_rates()
 # get best width for spectrogram images
 best_width = optimal_image_width()
-
-
-if __name__=='__main__':
-    audio = files_dict['id10343'][0]
-    fig = preprocess(audio)
-
+print('The optimal image width of spectrograms is: ', best_width)

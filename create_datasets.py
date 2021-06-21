@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib
 
-matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 
 def create_directory(folder, files_dict):
     os.mkdir(folder)
