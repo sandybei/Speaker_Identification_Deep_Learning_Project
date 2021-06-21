@@ -59,7 +59,6 @@ def optimal_image_width():
     img_widths = np.asarray(img_widths)
     best_width = np.percentile(img_widths, 95)
     best_width = int(best_width)
-
     # plot histogram 
     plt.hist(img_widths)
     plt.title('Image Widths')
@@ -69,14 +68,12 @@ def optimal_image_width():
     plt.legend()
     plt.show()
     plt.close()
-    
     # print spctrogram images info
     print('\n     Spectrogram Images Statistics  ')
     print('--------------------------------------')
     print('Mininum width:    ', np.min(img_widths))
     print('Maximum width :   ', np.max(img_widths))
     print('95th-Percentile:  ', best_width)
-    
     return best_width
     
 
@@ -90,10 +87,8 @@ def pad_or_crop_spectrogram(spec, best_width):
     """
     img_width = spec.shape[1]
     max_width = best_width
-    # crop image if width larger than best width
     if img_width > max_width:
         spec = spec[:, :max_width]  
-    # add padding at the start and at the end of the image if width less than best width
     elif img_width < max_width:
         pad_width = max_width - img_width
         left_pad_width = int(pad_width / 2)
@@ -108,14 +103,9 @@ def preprocess(file):
 
     :param file: filepath of an audio file
     :return: plot figure of the mel spectrogram of an audio wave
-
     """
-    # get spectrogram of audio file as a numpy array
     spec = audio_to_spectrogram(file)
-    # resize spectrogram
     processed_spec = pad_or_crop_spectrogram(spec, best_width)
-    print('shape: ,', processed_spec.shape)
-    # get plot figure of mel spectrogram 
     fig = plt.figure()
     librosa.display.specshow(librosa.power_to_db(processed_spec, ref=np.max))
     return fig
