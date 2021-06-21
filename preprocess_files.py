@@ -51,7 +51,9 @@ for id in ids:
     files_sum[id] = len(dev_files[id])
 # select 10 speakers for classification
 files_sum = files_sum.sort_values(ascending=False)
-print(files_sum.head(30)) 
+print('Number of files per speaker:')
+print(files_sum.head(20)) 
+# keep speakers with similar number of files
 files_sum = files_sum.iloc[4:14] 
 
 # get number of files for training and test set for a 80/20 split
@@ -76,7 +78,7 @@ for id in ids:
 
     
 # print file info
-print('\n            Files to be used for classification          ')
+print('\n                   Files information                   ')
 print('---------------------------------------------------------')
 print(f'Total number of audio files: {total_files}')
 print('Number of files to be used for training: ', train_files_num)
@@ -88,7 +90,7 @@ print('Number of files for each speaker for test set: ', files_per_id)
 metadata = get_metadata()
 labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
 labels.reset_index(drop=True, inplace=True)
-print('\n  Speakers to be used for classification')
-print('------------------------------------------')
+print('\n         Classification Labels       ')
+print('---------------------------------------')
 print(labels)
 

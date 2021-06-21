@@ -9,37 +9,6 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 
-def optimal_image_width():
-    """
-    finds the optimal width of spectrogram images in pixels
-
-    :return: the 95th percentile of all spectrogram images widths
-    """
-    img_widths = []
-    for id in files_dict.keys():    
-        for file in files_dict[id]:
-            spec = get_spectrogram(file) 
-            img_widths.append(spec.shape[1])
-    img_widths = np.asarray(img_widths)
-    best_width = np.percentile(img_widths, 95)
-    best_width = int(best_width)
-    # plot histogram 
-    plt.hist(img_widths)
-    plt.title('Images Widths')
-    plt.xlabel('Width in Pixels')
-    plt.ylabel('Frequency')
-    plt.axvline(x=best_width, color='r', linestyle='--', label='95th-percentile')
-    plt.legend()
-    plt.show()
-    # get spctrogram images info
-    print('\n        Spectrogram Images Statistics      ')
-    print('-------------------------------------------')
-    print('Mininum width:       ', np.min(img_widths))
-    print('Maximum width :      ', np.max(img_widths))
-    print('95th-Percentile: ', best_width)
-    return best_width
-
-
 def get_sample_rates():
     """
     checks if the sample rate of all audio files have the same or different sample rate
@@ -60,7 +29,7 @@ def get_sample_rates():
     return sample_rate
 
 
-def get_spectrogram(file):
+def audio_to_spectrogram(file):
     """
     takes an audio file and returns its spectrogram 
 
@@ -73,8 +42,42 @@ def get_spectrogram(file):
     mono_signal = stereo_to_mono(samples)
     mono_signal = mono_signal.astype(np.float32)
     # get spectrogram as numpy array
-    spectrogram = librosa.feature.melspectrogram(mono_signal, sample_rate, n_fft=2048, hop_length=2048, n_mels=128) # larger hop length 2048
+    spectrogram = librosa.feature.melspectrogram(mono_signal, sample_rate, n_fft=2048, hop_length=2048, n_mels=128) 
     return spectrogram
+
+
+def optimal_image_width():
+    """
+    finds the optimal width of spectrogram images in pixels
+
+    :return: the 95th percentile of all spectrogram images widths
+    """
+    # get best width
+    img_widths = []
+    for id in files_dict.keys():    
+        for file in files_dict[id]:
+            spec = audio_to_spectrogram(file) 
+            img_widths.append(spec.shape[1])
+    img_widths = np.asarray(img_widths)
+    best_width = np.percentile(img_widths, 95)
+    best_width = int(best_width)
+
+    # plot histogram 
+    plt.hist(img_widths)
+    plt.title('Image Widths')
+    plt.xlabel('Width in Pixels')
+    plt.ylabel('Frequency')
+    plt.axvline(x=best_width, color='r', linestyle='--', label='95th-percentile')
+    plt.legend()
+    plt.show()
+
+    # print spctrogram images info
+    print('\n     Spectrogram Images Statistics  ')
+    print('--------------------------------------')
+    print('Mininum width:    ', np.min(img_widths))
+    print('Maximum width :   ', np.max(img_widths))
+    print('95th-Percentile:  ', best_width)
+    return best_width
 
 
 def pad_or_crop_spectrogram(spec, best_width):
@@ -91,11 +94,15 @@ def pad_or_crop_spectrogram(spec, best_width):
     # crop image if length larger than best width
     if img_width > max_width:
         spec = spec[:, :max_width]  
-    # add padding at the end of the image if width less than best width
+    # add padding at the start and at the end of the image if width less than best width
     elif img_width < max_width:
         pad_width = max_width - img_width
-        padding = np.zeros((img_length, pad_width))
-        spec = np.column_stack((spec, padding))
+        left_pad_width = int(pad_width / 2)
+        right_pad_width = np.abs(img_width - pad_width)
+        left_pad = np.zeros((img_length, left_pad_width))
+        right_pad = np.zeros((img_length, right_pad_width))
+        spec = np.column_stack((left_pad, spec))
+        spec = np.column_stack((spec, right_pad))
     return spec
 
 
@@ -107,16 +114,24 @@ def preprocess(file):
     :return: plot figure of the mel spectrogram of an audio wave
 
     """
-    spec = get_spectrogram(file)
+    # get spectrogram of audio file as a numpy array
+    spec = audio_to_spectrogram(file)
+    # resize spectrogram
     processed_spec = pad_or_crop_spectrogram(spec, best_width)
+    # get plot figure of mel spectrogram 
     fig = plt.figure()
     librosa.display.specshow(librosa.power_to_db(processed_spec, ref=np.max))
+    plt.show()
     return fig
-
 
 
 # check if all audio files have the same sample rates
 sample_rates = get_sample_rates()
 # get best width for spectrogram images
 best_width = optimal_image_width()
+
+
+if __name__=='__main__':
+    audio = files_dict['id10343'][0]
+    fig = preprocess(audio)
 
