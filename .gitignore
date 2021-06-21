@@ -1,9 +1,9 @@
 # files and directories to ignore
 
 data/voxceleb_data/
-data/images/
-data/train
 data/test
+data/train
+data/val
 cnn.py
 functions.py
 .vscode/

@@ -1,4 +1,4 @@
-from preprocess_files import train_files, test_files
+from preprocess_files import train_files, val_files, test_files
 from audio_analysis import preprocess
 import os
 import matplotlib.pyplot as plt
@@ -23,6 +23,10 @@ def create_directory(folder, files_dict):
 # create directory for training set 
 folder = os.path.join('data', 'train')
 create_directory(folder, train_files)
+
+# create directory for validation set 
+folder = os.path.join('data', 'val')
+create_directory(folder, val_files)
 
 # create directory for test set
 folder = os.path.join('data', 'test')
