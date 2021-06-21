@@ -17,6 +17,7 @@ batch_size = 64
 img_height = 128
 img_width = 147
 
+
 # load training dataset
 train_ds = image_dataset_from_directory(
     train_dir,
@@ -52,6 +53,7 @@ train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 test_ds = test_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
+# build model
 model = Sequential([
   layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
   layers.Conv2D(16, 3, padding='same', activation='relu'),
@@ -87,4 +89,4 @@ history = model.fit(
 history_frame = pd.DataFrame(history.history)
 history_frame.loc[:, ['loss', 'val_loss']].plot(title='Training vs Validation Loss')
 plt.xlabel('Epochs')
-plt.show()
+plt.savefig(os.path.join('results', 'loss'))

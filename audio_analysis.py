@@ -5,6 +5,7 @@ from numpy.lib.arraypad import pad
 from pyAudioAnalysis.audioBasicIO import stereo_to_mono, read_audio_file
 from preprocess_files import files_dict
 import librosa.display
+import os
 
 
 def get_sample_rates():
@@ -66,14 +67,8 @@ def optimal_image_width():
     plt.ylabel('Frequency')
     plt.axvline(x=best_width, color='r', linestyle='--', label='95th-percentile')
     plt.legend()
-    plt.show()
+    plt.savefig('results' + os.sep + 'image_widths.png')
     plt.close()
-    # print spctrogram images info
-    print('\n     Spectrogram Images Statistics  ')
-    print('--------------------------------------')
-    print('Mininum width:    ', np.min(img_widths))
-    print('Maximum width :   ', np.max(img_widths))
-    print('95th-Percentile:  ', best_width)
     return best_width
     
 

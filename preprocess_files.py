@@ -61,7 +61,8 @@ files_sum = files_sum.iloc[4:14]
 ids = files_sum.index.to_list()
 files_sum.plot.barh()
 plt.title('Number of files per speaker')
-plt.show()
+plt.savefig(os.path.join('results', 'files_info.png'))
+plt.close()
 
 # get classification labels
 metadata = get_metadata()
