@@ -13,7 +13,7 @@ def optimal_image_width():
     """
     finds the optimal width of spectrogram images in pixels
 
-    :return: the 95-th percentile of all spectrogram images widths
+    :return: the 95th percentile of all spectrogram images widths
     """
     img_widths = []
     for id in files_dict.keys():    
@@ -36,7 +36,7 @@ def optimal_image_width():
     print('-------------------------------------------')
     print('Mininum width:       ', np.min(img_widths))
     print('Maximum width :      ', np.max(img_widths))
-    print('95-Percentile width: ', best_width)
+    print('95th-Percentile: ', best_width)
     return best_width
 
 
@@ -77,7 +77,6 @@ def get_spectrogram(file):
     return spectrogram
 
 
-
 def pad_or_crop_spectrogram(spec, best_width):
     """
     - crops spectrogram image to have width equal to the 95th percentile of all widths if it has less
@@ -104,7 +103,7 @@ def preprocess(file):
     """
     gets audio file and returns its mel spectrogram
 
-    :param file: filepathof an audio file
+    :param file: filepath of an audio file
     :return: plot figure of the mel spectrogram of an audio wave
 
     """

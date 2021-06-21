@@ -1,15 +1,12 @@
 import os
-import json
 import pandas as pd
-
 
 def get_metadata():
     """
     reads voxceleb metadata file and keeps speakers names and ids
     """
-    folder_path = 'data' + os.sep + 'metadata' + os.sep 
     # load file with metadata
-    metadata = pd.read_csv(folder_path + 'vox1_meta.csv', sep='\t')
+    metadata = pd.read_csv(os.path.join('data', 'vox1_meta.csv'), sep='\t')
     # keep id and name columns
     metadata = metadata[['VoxCeleb1 ID', 'VGGFace1 ID']]
     return metadata
@@ -46,7 +43,7 @@ def create_file_dictionary(dir):
 dev_dir = 'data' + os.sep + 'voxceleb_data' + os.sep + 'wav'
 dev_files = create_file_dictionary(dev_dir)
 
-# create series with the number of audio files per speaker id
+# get number of audio files per speaker id
 files_sum = pd.Series(dtype=float)
 new_dict = {}
 ids = dev_files.keys()
@@ -64,12 +61,19 @@ train_files_num = int(total_files - test_files_num)
 files_per_id = round(test_files_num / files_sum.shape[0])
 files_sum = files_sum.iloc[:files_per_id] 
 ids = files_sum.index
+
+# get all audio files to be used for training / test
+files_dict = {id: dev_files[id] for id in ids}
+#with open(output_file_name, 'w') as output_file:
+#    json.dump(all_files, output_file, indent=2) 
+
 # get training and test set files
 train_files = {}
 test_files = {}
 for id in ids:
     train_files[id] = dev_files[id][files_per_id:]
     test_files[id] = dev_files[id][:files_per_id]
+
     
 # print file info
 print('\n            Files to be used for classification          ')
@@ -78,12 +82,6 @@ print(f'Total number of audio files: {total_files}')
 print('Number of files to be used for training: ', train_files_num)
 print('Number of files to be used for test: ', test_files_num)
 print('Number of files for each speaker for test set: ', files_per_id)
-
-
-# get all audio files to be used for training / test
-files_dict = {id: dev_files[id] for id in ids}
-#with open(output_file_name, 'w') as output_file:
-#    json.dump(all_files, output_file, indent=2) 
 
 
 # get classification lables

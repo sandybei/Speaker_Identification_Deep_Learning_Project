@@ -20,7 +20,7 @@ def create_directory(folder, files_dict):
     return
 
 
-# create directory for training set
+# create directory for training set 
 folder = os.path.join('data', 'train')
 create_directory(folder, train_files)
 
