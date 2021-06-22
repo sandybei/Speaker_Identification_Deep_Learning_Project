@@ -10,13 +10,11 @@ import os
 # get datasets directories
 train_dir = os.path.join('data', 'train')
 val_dir = os.path.join('data', 'val')
-test_dir = os.path.join('data', 'test')
 
 # dataset loader parameters
 batch_size = 64
 img_height = 128
 img_width = 147
-
 
 # load training dataset
 train_ds = image_dataset_from_directory(
@@ -31,16 +29,6 @@ train_ds = image_dataset_from_directory(
 # load validation dataset
 val_ds = image_dataset_from_directory(
     val_dir,
-    labels='inferred',
-    label_mode='categorical',
-    image_size=(img_height,img_width),
-    seed=123,
-    batch_size=batch_size
-)
-
-# load test dataset
-test_ds = image_dataset_from_directory(
-    test_dir,
     labels='inferred',
     label_mode='categorical',
     image_size=(img_height,img_width),
@@ -67,15 +55,16 @@ model = Sequential([
   layers.Dense(10, activation='softmax')
 ])
 
+# print model structure
+print(model.summary())
+
 # compile model
 model.compile(
     optimizer='adam',
     loss='categorical_crossentropy',
     metrics=['accuracy'])
 
-print(model.summary())
-
-# fit model
+# fit model to data
 epochs=20
 callback = EarlyStopping(monitor='loss', patience=5)
 history = model.fit(
@@ -85,8 +74,13 @@ history = model.fit(
   callbacks=[callback]
 )
 
+# save model weights to HDF5
+model.save("model.h5")
+
 # plot training and validation loss
 history_frame = pd.DataFrame(history.history)
 history_frame.loc[:, ['loss', 'val_loss']].plot(title='Training vs Validation Loss')
 plt.xlabel('Epochs')
 plt.savefig(os.path.join('results', 'loss.png'))
+
+

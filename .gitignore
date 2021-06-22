@@ -8,3 +8,4 @@ functions.py
 .vscode/
 __pycache__/
 predict.py
+model.h5
