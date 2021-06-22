@@ -89,4 +89,4 @@ history = model.fit(
 history_frame = pd.DataFrame(history.history)
 history_frame.loc[:, ['loss', 'val_loss']].plot(title='Training vs Validation Loss')
 plt.xlabel('Epochs')
-plt.savefig(os.path.join('results', 'loss'))
+plt.savefig(os.path.join('results', 'loss.png'))

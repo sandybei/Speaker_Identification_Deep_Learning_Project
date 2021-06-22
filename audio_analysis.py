@@ -21,10 +21,6 @@ def get_sample_rates():
             sample_rates.append(sample_rate)
     sample_rates = np.asarray(sample_rates)
     sample_rates = np.unique(sample_rates)
-    if len(sample_rates) == 1:
-        print(f'\nAll audios have the same sample rate: {sample_rates[0]} kHz')
-    else:
-        print("Audios have different sample rates")
     return sample_rate
 
 
@@ -67,7 +63,7 @@ def optimal_image_width():
     plt.ylabel('Frequency')
     plt.axvline(x=best_width, color='r', linestyle='--', label='95th-percentile')
     plt.legend()
-    plt.savefig('results' + os.sep + 'image_widths.png')
+    plt.savefig(os.path.join('results', 'image_widths.png'))
     plt.close()
     return best_width
     
@@ -108,6 +104,11 @@ def preprocess(file):
 
 # check if all audio files have the same sample rates
 sample_rates = get_sample_rates()
+if len(sample_rates) == 1:
+    print(f'\nAll audios have the same sample rate: {sample_rates[0]} kHz')
+else:
+    print("Audios have different sample rates")
+    
 # get best width for spectrogram images
 best_width = optimal_image_width()
 print('The optimal image width of spectrograms is: ', best_width)
