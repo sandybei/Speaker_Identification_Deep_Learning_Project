@@ -66,8 +66,8 @@ plt.close()
 
 # get classification labels
 metadata = get_metadata()
-labels_df = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
-labels_df.reset_index(drop=True, inplace=True)
+labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
+labels.reset_index(drop=True, inplace=True)
 
 # get number of files for training and test set for a 80/20 split
 total_files = files_sum.sum()
