@@ -52,9 +52,9 @@ class_names = sorted(class_names)
 
 # make predictions on test images
 files = [
-    os.path.join(test_dir, 'id10203'+ os.sep + '41.png'),
-    os.path.join(test_dir, 'id10397'+ os.sep + '6.png'),
-    os.path.join(test_dir, 'id11184'+ os.sep + '5.png')
+    os.path.join(test_dir, 'id10343'+ os.sep + '41.png'),
+    os.path.join(test_dir, 'id11184'+ os.sep + '6.png'),
+    os.path.join(test_dir, 'id10945'+ os.sep + '10.png')
 ]
 
 for i, file in enumerate(files):

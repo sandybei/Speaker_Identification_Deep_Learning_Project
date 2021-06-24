@@ -5,12 +5,12 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers.experimental.preprocessing import RandomCrop, Rescaling
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import optimizers
-import os
 import matplotlib.pyplot as plt
 import pandas as pd
-from keras.models import load_model
+import os
 
-# get datasets directories
+
+# get dataset directories
 train_dir = os.path.join('data', 'train')
 val_dir = os.path.join('data', 'val')
 
@@ -42,9 +42,6 @@ val_ds = img_gen.flow_from_directory(
     shuffle=True
 )
 
-#AUTOTUNE = tf.data.AUTOTUNE
-#train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-#val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
 # build model
 model = Sequential([

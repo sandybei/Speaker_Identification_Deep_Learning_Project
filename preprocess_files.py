@@ -1,7 +1,7 @@
-from ntpath import join
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from tensorflow.keras import preprocessing
 
 def get_metadata():
     """
@@ -10,7 +10,7 @@ def get_metadata():
     # load file with metadata
     metadata = pd.read_csv(os.path.join('data', 'vox1_meta.csv'), sep='\t')
     # keep id and name columns
-    metadata = metadata[['VoxCeleb1 ID', 'VGGFace1 ID']]
+    #metadata = metadata[['VoxCeleb1 ID', 'VGGFace1 ID']]
     return metadata
 
 
@@ -51,40 +51,33 @@ new_dict = {}
 ids = dev_files.keys()
 for id in ids:
     files_sum[id] = len(dev_files[id])
-
 # select 10 speakers for classification
 files_sum = files_sum.sort_values(ascending=False)
-print('Number of files per speaker:')
-print(files_sum.head(20)) 
+files_sum.iloc[:20].plot.barh(title='Number of files per speaker\n(for top 20 speakers with most audio files)')
+plt.savefig(os.path.join('results', 'files_per_speaker.png'))
+plt.close()
 # keep speakers with similar number of files
 files_sum = files_sum.iloc[4:14] 
 ids = files_sum.index.to_list()
-files_sum.plot.barh()
-plt.title('Number of files per speaker')
-plt.savefig(os.path.join('results', 'files_info.png'))
-plt.close()
 
 # get classification labels
 metadata = get_metadata()
 labels = metadata.loc[metadata['VoxCeleb1 ID'].isin(ids)]
 labels.reset_index(drop=True, inplace=True)
 
-# get number of files for training and test set for a 80/20 split
+# get number of files for training, validation and test set for a 80/10/10 split
 total_files = files_sum.sum()
 test_files_num = int(total_files * 10 / 100)
 val_files_num = int(total_files * 10 / 100)
 train_files_num = int(total_files - (test_files_num + val_files_num))
 files_per_id = round(test_files_num / files_sum.shape[0])
 files_sum = files_sum.iloc[:files_per_id] 
-
-# print file info
-print('\n                   Files information                   ')
-print('---------------------------------------------------------')
-print(f'Total number of audio files: {total_files}')
-print('Number of files to be used for training: ', train_files_num)
-print('Number of files to be used for validation: ', val_files_num)
-print('Number of files to be used for test: ', test_files_num)
-print('Number of files for each speaker for test set: ', files_per_id)
+# get file info plot
+files_info = pd.Series({'Total': total_files, 'Training': train_files_num, 'Validation': val_files_num, 'Test': test_files_num})
+files_info.plot.barh(title='Number of audio files')
+plt.tight_layout()
+plt.savefig(os.path.join('results', 'files_info.png'))
+plt.close()
 
 
 # get all audio files to be used 
