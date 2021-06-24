@@ -1,9 +1,8 @@
 import os
-import tensorflow.keras
 from keras.preprocessing import image
 from keras.models import load_model
-from tensorflow.keras.preprocessing import image_dataset_from_directory
 import numpy as np
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from preprocess_files import metadata
 from glob import glob
 
@@ -11,8 +10,7 @@ from glob import glob
 def prepare_image(file):
     img = image.load_img(file, target_size=(img_height, img_width))
     img = image.img_to_array(img)
-    img = img / 255
-    img = img.astype(np.float32)
+    img = img / 255.
     img = np.expand_dims(img, axis=0)
     return img
 
@@ -26,25 +24,26 @@ img_height = 128
 img_width = 147
 
 # load test dataset
-test_ds = image_dataset_from_directory(
+img_gen = ImageDataGenerator(rescale=1./255)
+test_ds = img_gen.flow_from_directory(
     test_dir,
-    labels='inferred',
-    label_mode='categorical',
-    image_size=(img_height,img_width),
-    seed=123,
+    class_mode='categorical',
+    target_size=(img_height,img_width),
+    seed=0,
     batch_size=batch_size
 )
 
-
 # load model
 model = load_model('model.h5')
+print('model loaded')
 
 # evaluate model on test set
-score = model.evaluate(test_ds, verbose=1) 
+score = model.evaluate(test_ds, verbose=1, steps=len(test_ds)) 
 test_loss = round(score[0],2)
 test_accuracy = round(score[1],2)*100
 print('Test loss:', test_loss) 
 print(f'Test accuracy: {test_accuracy} %\n')
+
 
 # get class names
 folders = glob("data/test/*") 
@@ -52,30 +51,31 @@ class_names = [os.path.basename(folder) for folder in folders]
 class_names = sorted(class_names) 
 
 # make predictions on test images
-file_1 = test_dir + os.sep + 'id10715' + os.sep + '41.png' 
-file_2 = test_dir + os.sep + 'id10397' + os.sep + '3.png'
-file_3 = test_dir + os.sep + 'id10935' + os.sep + '11.png'
-files = [file_1,file_2,file_3]
+files = [
+    os.path.join(test_dir, 'id10203'+ os.sep + '41.png'),
+    os.path.join(test_dir, 'id10397'+ os.sep + '6.png'),
+    os.path.join(test_dir, 'id11184'+ os.sep + '5.png')
+]
+
 for i, file in enumerate(files):
     # prepare image
     test_img = prepare_image(file)
     # get softmax probability 
-    y_prob = model.predict(test_img)
-    print(y_prob)
-    index = np.argmax(y_prob)
-    y_prob_max = np.max(y_prob)
+    prob = model.predict(test_img)
+    index = np.argmax(prob)
+    prob_max = np.max(prob)
+    prob_max = round(float(prob_max),2) * 100
     # get predicted spaker name
-    print(index)
     id = class_names[index]
-    speaker = metadata.loc[metadata['VoxCeleb1 ID'] == id]
-    name = speaker['VGGFace1 ID'].item()
+    pred_speaker = metadata.loc[metadata['VoxCeleb1 ID'] == id]
+    pred_name = pred_speaker['VGGFace1 ID'].item()
     # get true speaker name
     true_id = os.path.basename(os.path.dirname(file))
     true_speaker = metadata.loc[metadata['VoxCeleb1 ID'] == true_id]
     true_name = true_speaker['VGGFace1 ID'].item()
-    # print results
+    # print results 
     print('Prediction: ', i + 1)
-    print(f'Predicted speaker {name} with probability: {y_prob_max}')
+    print(f'Predicted speaker {pred_name} with probability: {prob_max} %')
     print('True speaker name: ', true_name)
     print('-------------------------------------')
 

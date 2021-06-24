@@ -1,12 +1,14 @@
+import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras import layers
-from tensorflow.keras.preprocessing import image_dataset_from_directory
-from tensorflow.python.keras.preprocessing.image import ImageDataGenerator 
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.layers.experimental.preprocessing import RandomCrop, Rescaling
 from tensorflow.keras.callbacks import EarlyStopping
-import tensorflow as tf
-import pandas as pd
-import matplotlib.pyplot as plt
+from tensorflow.keras import optimizers
 import os
+import matplotlib.pyplot as plt
+import pandas as pd
+from keras.models import load_model
 
 # get datasets directories
 train_dir = os.path.join('data', 'train')
@@ -18,33 +20,31 @@ img_height = 128
 img_width = 147
 n_channels = 3
 
+img_gen = ImageDataGenerator(rescale=1./255)
 
 # load training dataset
-train_ds = ImageDataGenerator(rescale=1./255)
-train_ds = image_dataset_from_directory(
+train_ds = img_gen.flow_from_directory(
     train_dir,
-    labels='inferred',
-    label_mode='categorical',
-    image_size=(img_height,img_width),
+    class_mode='categorical',
+    target_size=(img_height,img_width),
     seed=0,
-    batch_size=batch_size
+    batch_size=batch_size,
+    shuffle=True
 )
 
 # load validation dataset
-val_ds = ImageDataGenerator(rescale=1./255)
-val_ds = image_dataset_from_directory(
+val_ds = img_gen.flow_from_directory(
     val_dir,
-    labels='inferred',
-    label_mode='categorical',
-    image_size=(img_height,img_width),
+    class_mode='categorical',
+    target_size=(img_height,img_width),
     seed=0,
-    batch_size=batch_size
+    batch_size=batch_size,
+    shuffle=True
 )
 
-AUTOTUNE = tf.data.AUTOTUNE
-train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
-
+#AUTOTUNE = tf.data.AUTOTUNE
+#train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
+#val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
 # build model
 model = Sequential([
@@ -68,23 +68,25 @@ model = Sequential([
 print(model.summary())
 
 # compile model
+opt = optimizers.Adam(learning_rate=0.0001)
 model.compile(
-    optimizer='adam',
+    optimizer=opt,
     loss='categorical_crossentropy',
     metrics=['accuracy'])
 
 # fit model to data
-epochs=30
-callback = EarlyStopping(monitor='loss', patience=5)
+epochs=20
+#callback = EarlyStopping(monitor='val_loss',mode='auto')
 history = model.fit(
   train_ds,
   validation_data=val_ds,
   epochs=epochs,
-  callbacks=[callback]
+  #callbacks=[callback]
 )
 
 # save model weights to HDF5
 model.save("model.h5")
+
 
 # plot training and validation loss
 history_frame = pd.DataFrame(history.history)
