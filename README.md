@@ -10,8 +10,7 @@ Speaker Identitication by Voice.
 
 [VoxCeleb](https://www.robots.ox.ac.uk/~vgg/data/voxceleb/) is an audio-visual dataset consisting of short clips of human speech, extracted from interview videos uploaded to YouTube. The dataset consists of two versions, VoxCeleb1 and VoxCeleb2. For this project the dataset VoxCeleb1 was selected, that contains over 100,000 utterances for 1,251 celebrities.
 
-A file with full names, nationality and gender labels for all the speakers in the dataset is also provided. From this file the full name will be used for the verification of the speaker.
-
+### Dowmload Dataset
 **1. Download files:**
 ```
 vox1_dev_wav_partaa
@@ -26,9 +25,16 @@ Concatenate all files using the following command:
 $ cat vox1_dev* > vox1_dev_wav.zip
 ```
 
-**3. Put all files in 'data' folder.**
+**3. Put files in 'data' folder.**\
+
+
 **4. Unzip files:**\
 Unzip vox1_dev_wav.zip inside data folder.
+
+### Download metadata
+A file with full names, nationality and gender labels for all the speakers in the dataset is also provided. From this file the full name will be used for the verification of the speaker.
+
+Download metadata by clicking of this link [https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/vox1_meta.csv](https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/vox1_meta.csv).
 
 # Dependencies
 
