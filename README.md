@@ -12,8 +12,25 @@ Speaker Identitication by Voice.
 
 A file with full names, nationality and gender labels for all the speakers in the dataset is also provided. From this file the full name will be used for the verification of the speaker.
 
+**1. Download files:**
+```
+vox1_dev_wav_partaa
+vox1_dev_wav_partab
+vox1_dev_wav_partac
+vox1_dev_wav_partad
+```
 
-# Requirements
+**2. Concatenate files:**\
+Concatenate all files using the following command:
+```
+$ cat vox1_dev* > vox1_dev_wav.zip
+```
+
+**3. Put all files in 'data' folder.**
+**4. Unzip files:**\
+Unzip vox1_dev_wav.zip inside data folder.
+
+# Dependencies
 
 
 ## References
