@@ -17,7 +17,7 @@ val_dir = os.path.join('data', 'val')
 # dataset parameters
 BATCH_SIZE = 64
 IMG_HEIGHT = 128
-IMG_WIDTH = 147
+IMG_WIDTH = 128
 N_CHANNELS = 3
 
 img_gen = ImageDataGenerator(rescale=1./255)
@@ -49,12 +49,12 @@ model = Sequential([
   layers.BatchNormalization(),
   layers.MaxPooling2D(),
   layers.BatchNormalization(),
-  layers.Conv2D(32, 3, padding='same', activation='relu'),
+  layers.Conv2D(32, 3, padding='valid', activation='relu'),
   layers.BatchNormalization(),
   layers.MaxPooling2D(),
   layers.BatchNormalization(),
   layers.Flatten(),
-  layers.Dense(500, activation='relu'),
+  layers.Dense(300, activation='relu'),
   layers.BatchNormalization(),
   layers.Dropout((0.6)),
   layers.Dense(10, activation='softmax')
@@ -71,8 +71,8 @@ model.compile(
     metrics=['accuracy'])
 
 # fit model to data
-epochs = 30
-callback = EarlyStopping(monitor='val_loss', patience=7, mode='min')
+epochs = 40
+#callback = EarlyStopping(monitor='val_loss', patience=7, mode='min')
 early_stopping = EarlyStopping(
     min_delta=0.001, 
     patience=10, 
