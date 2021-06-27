@@ -1,10 +1,16 @@
 import os
-from numpy.lib.function_base import rot90
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
 def map_files_to_labels(dir):
+    """
+    This function takes as input a directory with folders named after the speakers id
+    and subfolders corresponding to different YouTube interviews and keeps their
+
+    :param dir: directory of audio files
+    :return: a list of the speakers ids and list of all audio files
+    """
     dir_split = dir.split(os.sep)
     for word in dir_split:
         if 'id' in word:
@@ -19,13 +25,18 @@ def map_files_to_labels(dir):
 
 
 def create_file_dictionary(dir):
+    """
+    This functions creates a dictionary of audio files with keys the speakers ids
+    that they correspond 
+
+    :param dir: directory of audio files
+    :return: a dictionary that maps speakers ids with to their audio files
+    """
     files_dict = {}
-    labels = []
     audio_files_list = []
     for folder in os.listdir(dir):
         folder_path = os.path.join(dir, folder)
         label, audio_files = map_files_to_labels(folder_path)
-        labels.append(label)
         audio_files_list.append(audio_files)
         files_dict[label] = audio_files
     return files_dict
@@ -55,11 +66,11 @@ test_files_num = int(total_files * 10 / 100)
 val_files_num = int(total_files * 10 / 100)
 train_files_num = int(total_files - (test_files_num + val_files_num))
 files_per_id = round(test_files_num / files.shape[0])
-# get file info plot
+# get file numbers plot
 files_info = pd.Series({'Total': total_files, 'Training': train_files_num, 'Validation': val_files_num, 'Test': test_files_num})
 files_info.plot.barh(title='Number of audio files')
 plt.tight_layout()
-plt.savefig(os.path.join('results', 'files_info.png'))
+plt.savefig(os.path.join('results', 'files_numbers.png'))
 plt.close()
 
 # get classification labels

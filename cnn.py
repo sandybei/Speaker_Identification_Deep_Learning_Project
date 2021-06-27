@@ -57,7 +57,7 @@ model = Sequential([
   layers.Flatten(),
   layers.Dense(300, activation='relu'),
   layers.BatchNormalization(),
-  layers.Dropout((0.5)),
+  layers.Dropout((0.6)),
   layers.Dense(10, activation='softmax')
 ])
 
@@ -73,7 +73,7 @@ model.compile(
 
 # fit model to data
 epochs=20
-#callback = EarlyStopping(monitor='val_loss',mode='auto')
+callback = EarlyStopping(monitor='val_loss', patience=5, mode='min')
 history = model.fit(
   train_ds,
   validation_data=val_ds,
