@@ -15,10 +15,10 @@ train_dir = os.path.join('data', 'train')
 val_dir = os.path.join('data', 'val')
 
 # dataset parameters
-batch_size = 64
-img_height = 128
-img_width = 147
-n_channels = 3
+BATCH_SIZE = 64
+IMG_HEIGHT = 128
+IMG_WIDTH = 147
+N_CHANNELS = 3
 
 img_gen = ImageDataGenerator(rescale=1./255)
 
@@ -26,9 +26,9 @@ img_gen = ImageDataGenerator(rescale=1./255)
 train_ds = img_gen.flow_from_directory(
     train_dir,
     class_mode='categorical',
-    target_size=(img_height,img_width),
+    target_size=(IMG_HEIGHT,IMG_WIDTH),
     seed=0,
-    batch_size=batch_size,
+    batch_size=BATCH_SIZE,
     shuffle=True
 )
 
@@ -36,26 +36,25 @@ train_ds = img_gen.flow_from_directory(
 val_ds = img_gen.flow_from_directory(
     val_dir,
     class_mode='categorical',
-    target_size=(img_height,img_width),
+    target_size=(IMG_HEIGHT,IMG_WIDTH),
     seed=0,
-    batch_size=batch_size,
+    batch_size=BATCH_SIZE,
     shuffle=True
 )
 
-
 # build model
 model = Sequential([
-  layers.Input(shape=(img_height, img_width, n_channels)),
-  layers.Conv2D(16, (3,3), padding='same', activation='relu'),
+  layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, N_CHANNELS)),
+  layers.Conv2D(16, 3, padding='same', activation='relu'),
   layers.BatchNormalization(),
-  layers.MaxPooling2D((2,2)),
+  layers.MaxPooling2D(),
   layers.BatchNormalization(),
   layers.Conv2D(32, 3, padding='same', activation='relu'),
   layers.BatchNormalization(),
   layers.MaxPooling2D(),
   layers.BatchNormalization(),
   layers.Flatten(),
-  layers.Dense(300, activation='relu'),
+  layers.Dense(500, activation='relu'),
   layers.BatchNormalization(),
   layers.Dropout((0.6)),
   layers.Dense(10, activation='softmax')
@@ -65,30 +64,41 @@ model = Sequential([
 print(model.summary())
 
 # compile model
-opt = optimizers.Adam(learning_rate=0.0001)
+optimizer = optimizers.Adam(learning_rate=0.0001)
 model.compile(
-    optimizer=opt,
+    optimizer=optimizer,
     loss='categorical_crossentropy',
     metrics=['accuracy'])
 
 # fit model to data
-epochs=20
-callback = EarlyStopping(monitor='val_loss', patience=5, mode='min')
+epochs = 30
+callback = EarlyStopping(monitor='val_loss', patience=7, mode='min')
+early_stopping = EarlyStopping(
+    min_delta=0.001, 
+    patience=10, 
+    restore_best_weights=True,
+)
+
 history = model.fit(
   train_ds,
   validation_data=val_ds,
   epochs=epochs,
-  #callbacks=[callback]
+#  callbacks=[early_stopping]
 )
 
 # save model weights to HDF5
 model.save("model.h5")
 
-
-# plot training and validation loss
+# plot training vs accuracy loss and accuracy
 history_frame = pd.DataFrame(history.history)
 history_frame.loc[:, ['loss', 'val_loss']].plot(title='Training vs Validation Loss')
 plt.xlabel('Epochs')
 plt.savefig(os.path.join('results', 'loss.png'))
+
+history_frame.loc[:, ['accuracy', 'val_accuracy']].plot(title='Training vs Validation Accuracy')
+plt.xlabel('Epochs')
+plt.savefig(os.path.join('results', 'accuracy.png'))
+
+
 
 

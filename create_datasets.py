@@ -1,4 +1,4 @@
-from preprocess_files import train_files, val_files, test_files
+from process_files import train_files, val_files, test_files
 from audio_analysis import preprocess
 import os
 import matplotlib.pyplot as plt
@@ -10,7 +10,7 @@ def create_directory(folder, files_dict):
     """
     This function is used for the creation of the image directories of the training, validation and test set.
     It creates a directory with folders whose names are the speakers ids and it saves inside them the spectrogram 
-    images that are extracted from their audio files by the 'preprocess' function.
+    images that get extracted from their audio files.
 
     :param folder: folder name of directory to be created
     :param files_dict: dictionary that maps speaker ids to their audio files

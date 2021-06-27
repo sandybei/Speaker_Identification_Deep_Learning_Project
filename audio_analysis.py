@@ -3,7 +3,7 @@ import numpy as np
 import librosa
 from numpy.lib.arraypad import pad
 from pyAudioAnalysis.audioBasicIO import stereo_to_mono, read_audio_file
-from preprocess_files import files_dict
+from process_files import files_dict
 import librosa.display
 import os
 
