@@ -3,10 +3,6 @@ import matplotlib.pyplot as plt
 from process_files import files_dict, get_metadata
 import os
 
-# get number of dataset
-files_num = files_dict.values
-print('Number of audio files: ',files_num)
-
 
 metadata = get_metadata()
 # print speakers selected for classification
@@ -15,7 +11,7 @@ print('Selected Speakers:\n', metadata['VGGFace1 ID'])
 # get plot of gender distribution
 metadata.reset_index(drop=True, inplace=True)
 group_gender = metadata.groupby(['Gender']).size()
-fig = group_gender.plot.bar()
+fig = group_gender.plot.barh()
 plt.title('Gender Distribution')
 plt.savefig(os.path.join('results', 'genders.png'))
 plt.close()

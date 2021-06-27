@@ -9,3 +9,4 @@ functions.py
 __pycache__/
 predict.py
 model.h5
+explore_data.py
