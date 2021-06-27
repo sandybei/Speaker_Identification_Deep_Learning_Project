@@ -105,7 +105,6 @@ def preprocess(file):
 # check if all audio files have the same sample rates
 sample_rates = get_sample_rates()
 
-
 # get best width for spectrogram images
 best_width = optimal_image_width()
 print('The optimal image width of spectrograms is: ', best_width)
