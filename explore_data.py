@@ -1,10 +1,12 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from process_files import files_dict, get_metadata
 import os
 
-
+# get metadata
 metadata = get_metadata()
+
 # print speakers selected for classification
 print('Selected Speakers:\n', metadata['VGGFace1 ID'])
 

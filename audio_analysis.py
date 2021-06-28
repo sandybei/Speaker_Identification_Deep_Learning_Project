@@ -7,7 +7,7 @@ import librosa.display
 import os
 
 
-def get_sample_rates():
+def same_sample_rates():
     """
     checks if the sample rate of all audio files have the same or different sample rate
 
@@ -20,12 +20,16 @@ def get_sample_rates():
             sample_rates.append(sample_rate)
     sample_rates = np.asarray(sample_rates)
     sample_rates = np.unique(sample_rates)
-    return sample_rate
+    if len(sample_rates) == 1:
+        print(f'All audio files have the same sample rate: {sample_rates[0]} kHz')
+    else:
+        print('The audio files have different sample rates.')
+    return 
 
 
 def audio_to_spectrogram(file):
     """
-    takes an audio file and returns its spectrogram 
+    takes an audio file and returns its mel spectrogram 
 
     :param file: filepath of an audio file
     :return: spectrogram of the audio wave as a numpy array
@@ -42,9 +46,9 @@ def audio_to_spectrogram(file):
 
 def optimal_image_width():
     """
-    finds the optimal width of spectrogram images in pixels
+    finds the optimal width of spectrogram images 
 
-    :return: the 95th percentile of all spectrogram images widths
+    :return: the 95-th percentile of all spectrograms widths
     """
     # get best width
     img_widths = []
@@ -69,11 +73,13 @@ def optimal_image_width():
 
 def pad_or_crop_spectrogram(spec, best_width):
     """
+    This function:
     - crops spectrogram image to have width equal to the 95th percentile of all widths if it has less
     - pads spectrogram image with zeros to have width equal to the 95th percentile of all widths if it has more
 
     :param spec: spectrogram as a numpy array
-    :return: padded or cropped spectrogram
+    :param best_width: the width that the input image's width has to be resized to
+    :return: padded or cropped spectrogram with width equal to best_width
     """
     img_width = spec.shape[1]
     max_width = best_width
@@ -89,10 +95,10 @@ def pad_or_crop_spectrogram(spec, best_width):
 
 def preprocess(file):
     """
-    gets audio file and returns its mel spectrogram
+    gets audio file and returns an image of its mel spectrogram of optimal width 
 
     :param file: filepath of an audio file
-    :return: plot figure of the mel spectrogram of an audio wave
+    :return: plot figure of the mel spectrogram of the audio wave
     """
     spec = audio_to_spectrogram(file)
     processed_spec = pad_or_crop_spectrogram(spec, best_width)
@@ -102,7 +108,7 @@ def preprocess(file):
 
 
 # check if all audio files have the same sample rates
-sample_rates = get_sample_rates()
+same_sample_rates()
 
 # get best width for spectrogram images
 best_width = optimal_image_width()

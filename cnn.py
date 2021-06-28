@@ -1,4 +1,3 @@
-import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras import layers
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -13,7 +12,7 @@ import os
 train_dir = os.path.join('data', 'train')
 val_dir = os.path.join('data', 'val')
 
-# dataset parameters
+# set dataset loader parameters
 BATCH_SIZE = 64
 IMG_HEIGHT = 128
 IMG_WIDTH = 128
@@ -71,7 +70,6 @@ model.compile(
 
 # fit model to data
 epochs = 50
-#callback = EarlyStopping(monitor='val_loss', patience=7, mode='min')
 early_stopping = EarlyStopping(
     min_delta=0.001, 
     patience=10, 
@@ -88,7 +86,7 @@ history = model.fit(
 # save model weights to HDF5
 model.save("model.h5")
 
-# plot training vs accuracy loss and accuracy
+# plot training vs validation loss and accuracy
 history_frame = pd.DataFrame(history.history)
 history_frame.loc[:, ['loss', 'val_loss']].plot(title='Training vs Validation Loss')
 plt.xlabel('Epochs')

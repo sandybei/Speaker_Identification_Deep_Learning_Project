@@ -81,7 +81,7 @@ for i, file in enumerate(files):
     true_name = true_speaker['VGGFace1 ID'].item()
     # print results 
     print('Prediction: ', i + 1)
-    print(f'Predicted speaker {pred_name} with probability {prob_max} %')
+    print(f'Predicted speaker {pred_name} with probability {round(prob_max,3)} %')
     print('True speaker name:', true_name)
     print('')
 
