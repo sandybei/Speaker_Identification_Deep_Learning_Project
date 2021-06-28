@@ -2,7 +2,6 @@ import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras import layers
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.layers.experimental.preprocessing import RandomCrop, Rescaling
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import optimizers
 import matplotlib.pyplot as plt
@@ -49,7 +48,7 @@ model = Sequential([
   layers.BatchNormalization(),
   layers.MaxPooling2D(),
   layers.BatchNormalization(),
-  layers.Conv2D(32, 3, padding='valid', activation='relu'),
+  layers.Conv2D(32, 3, padding='same', activation='relu'),
   layers.BatchNormalization(),
   layers.MaxPooling2D(),
   layers.BatchNormalization(),
@@ -64,14 +63,14 @@ model = Sequential([
 print(model.summary())
 
 # compile model
-optimizer = optimizers.Adam(learning_rate=0.0001)
+optimizer = optimizers.Adam(learning_rate=0.001)
 model.compile(
     optimizer=optimizer,
     loss='categorical_crossentropy',
     metrics=['accuracy'])
 
 # fit model to data
-epochs = 40
+epochs = 50
 #callback = EarlyStopping(monitor='val_loss', patience=7, mode='min')
 early_stopping = EarlyStopping(
     min_delta=0.001, 
@@ -83,7 +82,7 @@ history = model.fit(
   train_ds,
   validation_data=val_ds,
   epochs=epochs,
-#  callbacks=[early_stopping]
+  callbacks=[early_stopping]
 )
 
 # save model weights to HDF5

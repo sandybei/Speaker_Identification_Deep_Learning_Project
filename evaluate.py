@@ -27,7 +27,7 @@ test_dir = os.path.join('data', 'test')
 # set dataset generator parameters
 BATCH_SIZE = 64
 IMG_HEIGHT = 128
-IMG_WIDTH = 147
+IMG_WIDTH = 128
 N_CHANNELS = 3
 
 # load test dataset
@@ -46,8 +46,8 @@ print('model loaded')
 
 # evaluate model on test set
 score = model.evaluate(test_ds, verbose=1, steps=len(test_ds)) 
-test_loss = round(score[0],2)
-test_accuracy = round(score[1],2)*100
+test_loss = round(score[0],3)
+test_accuracy = round(score[1],3)*100
 print('Test loss:', test_loss) 
 print(f'Test accuracy: {test_accuracy} %\n')
 
@@ -69,7 +69,7 @@ for i, file in enumerate(files):
     prob = model.predict(test_img)
     index = np.argmax(prob)
     prob_max = np.max(prob)
-    prob_max = round(float(prob_max),2) * 100
+    prob_max = round(float(prob_max),3) * 100
     # get predicted spaker name
     id = class_names[index]
     metadata = get_metadata()
@@ -81,13 +81,9 @@ for i, file in enumerate(files):
     true_name = true_speaker['VGGFace1 ID'].item()
     # print results 
     print('Prediction: ', i + 1)
-    print(f'Predicted speaker {pred_name} with probability: {prob_max} %')
+    print(f'Predicted speaker {pred_name} with probability {prob_max} %')
     print('True speaker name:', true_name)
     print('')
-
-
-
-
 
 
 

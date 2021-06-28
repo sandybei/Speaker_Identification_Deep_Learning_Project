@@ -1,12 +1,11 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-import json
 
 
 def map_files_to_ids(dir):
     """
-    This functions creates a dictionary of audio files with keys the speakers ids and values
+    This functions creates a dictionary of audio files that maps the speakers ids to
     the audio files that correspond to them.
 
     :param dir: directory of audio files having the structure of voxceleb data folders
@@ -59,7 +58,6 @@ files_dict = {id: dev_files[id] for id in ids}
 
 # get number of files for training, validation and test set for a 80/10/10 split
 total_files = files_to_keep.sum()
-print(total_files)
 test_files_num = int(total_files * 10 / 100)
 val_files_num = int(total_files * 10 / 100)
 train_files_num = int(total_files - (test_files_num + val_files_num))
