@@ -52,30 +52,30 @@ pip install keras
 ## How to Use 
 Follow the next steps to generate results: 
 
-### Dataset Creation
+### 1. Dataset Creation
 Run the following command to extract a VoxCeleb1 subset that will be used for classification:
 
 ```
 $ python file_preprocess.py
 ```
-### Data Exploration
+### 2. Data Exploration
 Run the following command to visualize information about the dataset:
 ```
 $ python data_explore.py
 ```
-### Data Preprocessing
+### 3. Data Preprocessing
 Run the following command to create directories of audio spectrogram images:
 ```
 $ python create_directories.py
 ```
 
-### Training
+### 4. Training
 Run the following command to train the model:
 ```
 $ python cnn.py
 ```
 
-### Evaluation
+### 5. Evaluation
 5. Run the following command to evaluate the model's performance and make some predictions on test images:
 ```
 $ python evaluate.py
