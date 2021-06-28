@@ -52,7 +52,7 @@ model = Sequential([
   layers.MaxPooling2D(),
   layers.BatchNormalization(),
   layers.Flatten(),
-  layers.Dense(300, activation='relu'),
+  layers.Dense(286, activation='relu'),
   layers.BatchNormalization(),
   layers.Dropout((0.6)),
   layers.Dense(10, activation='softmax')
