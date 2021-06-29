@@ -58,7 +58,7 @@ class_names = sorted(class_names)
 
 # make predictions on 3 images from the test set
 files = [os.path.join(test_dir, 'id10343'+ os.sep + '41.png'),
-    os.path.join(test_dir, 'id11184'+ os.sep + '6.png'),
+    os.path.join(test_dir, 'id11184'+ os.sep + '11.png'),
     os.path.join(test_dir, 'id10945'+ os.sep + '10.png')
 ]
 

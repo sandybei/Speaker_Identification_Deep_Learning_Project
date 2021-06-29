@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 
 def map_files_to_ids(dir):
     """
-    This functions creates a dictionary of audio files that maps the speakers ids to
-    the audio files that correspond to them.
+    This functions creates a dictionary that maps the speakers ids to their audio files.
 
-    :param dir: directory of audio files having the structure of voxceleb data folders
+    :param dir: a directory of audio files having the structure of voxceleb data folders
     :return: a dictionary that maps speakers ids with to their audio files
     """
     files_dict = {}
@@ -25,6 +24,10 @@ def map_files_to_ids(dir):
     return files_dict
 
 def get_metadata():
+    """
+    this functions reads the voxceleb metadata file and gets the metadata of
+    the speakers to be used for classification
+    """
     # load voxceleb metadata
     metadata = pd.read_csv(os.path.join('data', 'vox1_meta.csv'), sep='\t')
 
@@ -48,7 +51,7 @@ for id in ids:
 # select 10 speakers with large numbers of audio files
 files = files.sort_values(ascending=False)
 files.iloc[:20].plot.barh(title='Number of files per speaker\n(for top 20 speakers with most audio files)')
-plt.savefig(os.path.join('results', 'files_per_speaker.png'))
+plt.savefig(os.path.join('plots', 'files_per_speaker.png'))
 plt.close()
 files_to_keep = files.iloc[4:14] 
 ids = files_to_keep.index.to_list()
@@ -56,21 +59,12 @@ ids = files_to_keep.index.to_list()
 # get all audio files to be used for classification
 files_dict = {id: dev_files[id] for id in ids}
 
-# get number of files for training, validation and test set for a 80/10/10 split
+# create training, validation and test set 
 total_files = files_to_keep.sum()
 test_files_num = int(total_files * 10 / 100)
 val_files_num = int(total_files * 10 / 100)
 train_files_num = int(total_files - (test_files_num + val_files_num))
 files_per_id = round(test_files_num / files.shape[0])
-
-# get plot of number of files per dataset
-files_info = pd.Series({'Total': total_files, 'Training': train_files_num, 'Validation': val_files_num, 'Test': test_files_num})
-files_info.plot.barh(title='Number of audio files')
-plt.tight_layout()
-plt.savefig(os.path.join('results', 'files_numbers.png'))
-plt.close()
-
-# create training, validation and test set files from voxceleb dev dataset
 train_files = {}
 val_files = {}
 test_files = {}
@@ -78,5 +72,12 @@ for id in ids:
     train_files[id] = dev_files[id][files_per_id*2:]
     val_files[id] = dev_files[id][:files_per_id-1]
     test_files[id] = dev_files[id][files_per_id:files_per_id*2]
+
+# get plot of number of files per dataset
+files_info = pd.Series({'Total': total_files, 'Training': train_files_num, 'Validation': val_files_num, 'Test': test_files_num})
+files_info.plot.barh(title='Number of audio files')
+plt.tight_layout()
+plt.savefig(os.path.join('plots', 'files_numbers.png'))
+plt.close()
 
 

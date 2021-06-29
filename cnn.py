@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
+from tensorflow.python.keras.layers.normalization import BatchNormalization
+
 
 # get dataset directories
 train_dir = os.path.join('data', 'train')
@@ -44,17 +46,12 @@ val_ds = img_gen.flow_from_directory(
 model = Sequential([
   layers.Input(shape=(IMG_HEIGHT, IMG_WIDTH, N_CHANNELS)),
   layers.Conv2D(16, 3, padding='same', activation='relu'),
-  layers.BatchNormalization(),
   layers.MaxPooling2D(),
-  layers.BatchNormalization(),
   layers.Conv2D(32, 3, padding='same', activation='relu'),
-  layers.BatchNormalization(),
   layers.MaxPooling2D(),
-  layers.BatchNormalization(),
   layers.Flatten(),
-  layers.Dense(286, activation='relu'),
-  layers.BatchNormalization(),
-  layers.Dropout((0.6)),
+  layers.Dense(300, activation='relu'),
+  layers.Dropout((0.5)),
   layers.Dense(10, activation='softmax')
 ])
 
@@ -62,7 +59,7 @@ model = Sequential([
 print(model.summary())
 
 # compile model
-optimizer = optimizers.Adam(learning_rate=0.0001)
+optimizer = optimizers.Adam(learning_rate=0.001)
 model.compile(
     optimizer=optimizer,
     loss='categorical_crossentropy',
@@ -72,7 +69,7 @@ model.compile(
 epochs = 50
 early_stopping = EarlyStopping(
     min_delta=0.001, 
-    patience=10, 
+    patience=5, 
     restore_best_weights=True,
 )
 
@@ -83,7 +80,6 @@ history = model.fit(
   callbacks=[early_stopping]
 )
 
-
 # save model weights to HDF5
 model.save("model.h5")
 
@@ -91,11 +87,11 @@ model.save("model.h5")
 history_frame = pd.DataFrame(history.history)
 history_frame.loc[:, ['loss', 'val_loss']].plot(title='Training vs Validation Loss')
 plt.xlabel('Epochs')
-plt.savefig(os.path.join('results', 'loss.png'))
+plt.savefig(os.path.join('plots', 'loss.png'))
 
 history_frame.loc[:, ['accuracy', 'val_accuracy']].plot(title='Training vs Validation Accuracy')
 plt.xlabel('Epochs')
-plt.savefig(os.path.join('results', 'accuracy.png'))
+plt.savefig(os.path.join('plots', 'accuracy.png'))
 
 
 

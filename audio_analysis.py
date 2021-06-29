@@ -9,9 +9,7 @@ import os
 
 def same_sample_rates():
     """
-    checks if the sample rate of all audio files have the same or different sample rate
-
-    :return: unique sample rates of all audio files
+    checks if all audio files have the same sample rate
     """
     sample_rates = []
     for id in files_dict.keys(): 
@@ -29,7 +27,7 @@ def same_sample_rates():
 
 def audio_to_spectrogram(file):
     """
-    takes an audio file and returns its mel spectrogram 
+    takes an audio file and returns its Mel spectrogram 
 
     :param file: filepath of an audio file
     :return: spectrogram of the audio wave as a numpy array
@@ -46,7 +44,7 @@ def audio_to_spectrogram(file):
 
 def optimal_image_width():
     """
-    finds the optimal width of spectrogram images 
+    finds the optimal width for a spectrogram image 
 
     :return: the 95-th percentile of all spectrograms widths
     """
@@ -59,14 +57,14 @@ def optimal_image_width():
     img_widths = np.asarray(img_widths)
     best_width = np.percentile(img_widths, 95)
     best_width = int(best_width)
-    # plot histogram 
+    # plot histogram of spectrograms' widths
     plt.hist(img_widths)
     plt.title('Image Widths')
     plt.xlabel('Width in Pixels')
     plt.ylabel('Frequency')
     plt.axvline(x=best_width, color='r', linestyle='--', label='95th-percentile')
     plt.legend()
-    plt.savefig(os.path.join('results', 'image_widths.png'))
+    plt.savefig(os.path.join('plots', 'image_widths.png'))
     plt.close()
     return best_width
     
@@ -74,12 +72,12 @@ def optimal_image_width():
 def pad_or_crop_spectrogram(spec, best_width):
     """
     This function:
-    - crops spectrogram image to have width equal to the 95th percentile of all widths if it has less
-    - pads spectrogram image with zeros to have width equal to the 95th percentile of all widths if it has more
+    - crops a spectrogram image to have width equal to the 95th percentile of all widths if it has less
+    - pads a spectrogram image with zeros to have width equal to the 95th percentile of all widths if it has more
 
     :param spec: spectrogram as a numpy array
-    :param best_width: the width that the input image's width has to be resized to
-    :return: padded or cropped spectrogram with width equal to best_width
+    :param best_width: the width the input image's width has to be resized to
+    :return: padded or cropped spectrogram 
     """
     img_width = spec.shape[1]
     max_width = best_width
@@ -95,10 +93,10 @@ def pad_or_crop_spectrogram(spec, best_width):
 
 def preprocess(file):
     """
-    gets audio file and returns an image of its mel spectrogram of optimal width 
+    gets audio file and returns an image of its Mel spectrogram of optimal width 
 
     :param file: filepath of an audio file
-    :return: plot figure of the mel spectrogram of the audio wave
+    :return: plot figure of its Mel spectrogram of the audio wave
     """
     spec = audio_to_spectrogram(file)
     processed_spec = pad_or_crop_spectrogram(spec, best_width)
