@@ -64,9 +64,10 @@ Run the following command to visualize information about the dataset:
 $ python data_explore.py
 ```
 ### 3. Data Preprocessing
-Run the following command to create directories of audio spectrogram images:
+File ```audio_analysis``` contains functions for audio signal processing and their conversion to audio spectrograms.
+Run the following command to create directories of spectrogram images to be used for training:
 ```
-$ python create_directories.py
+$ python preprocess_audio.py
 ```
 
 ### 4. Training
@@ -76,7 +77,7 @@ $ python cnn.py
 ```
 
 ### 5. Evaluation
-5. Run the following command to evaluate the model's performance and make some predictions on test images:
+Run the following command to evaluate the model's performance and make some predictions on test images:
 ```
 $ python evaluate.py
 ```
