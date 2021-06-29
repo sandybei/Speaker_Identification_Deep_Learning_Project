@@ -62,7 +62,7 @@ model = Sequential([
 print(model.summary())
 
 # compile model
-optimizer = optimizers.Adam(learning_rate=0.001)
+optimizer = optimizers.Adam(learning_rate=0.0001)
 model.compile(
     optimizer=optimizer,
     loss='categorical_crossentropy',
@@ -82,6 +82,7 @@ history = model.fit(
   epochs=epochs,
   callbacks=[early_stopping]
 )
+
 
 # save model weights to HDF5
 model.save("model.h5")
