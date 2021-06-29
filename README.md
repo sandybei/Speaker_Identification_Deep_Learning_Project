@@ -64,7 +64,7 @@ Run the following command to visualize information about the dataset:
 $ python data_explore.py
 ```
 ### 3. Data Preprocessing
-File ```audio_analysis``` contains functions for audio signal processing and their conversion to audio spectrograms.
+File 'audio_analysis' contains functions for audio signal processing and their conversion to audio spectrograms.
 Run the following command to create directories of spectrogram images to be used for training:
 ```
 $ python preprocess_audio.py
