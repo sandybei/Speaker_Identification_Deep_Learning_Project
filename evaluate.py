@@ -57,9 +57,13 @@ class_names = [os.path.basename(folder) for folder in folders]
 class_names = sorted(class_names) 
 
 # make predictions on 3 images from the test set
-files = [os.path.join(test_dir, 'id10343'+ os.sep + '41.png'),
+files = [
+    os.path.join(test_dir, 'id10203'+ os.sep + '15.png'),
+    os.path.join(test_dir, 'id10343'+ os.sep + '41.png'),
+    os.path.join(test_dir, 'id10397'+ os.sep + '5.png'),
+    os.path.join(test_dir, 'id10710'+ os.sep + '0.png'),
     os.path.join(test_dir, 'id11184'+ os.sep + '11.png'),
-    os.path.join(test_dir, 'id10945'+ os.sep + '10.png')
+    os.path.join(test_dir, 'id10945'+ os.sep + '10.png'),
 ]
 
 for i, file in enumerate(files):
