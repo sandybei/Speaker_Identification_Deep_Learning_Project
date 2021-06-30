@@ -30,6 +30,7 @@ $ cat vox1_dev* > vox1_dev_wav.zip
 Download a file with full names, nationality and gender labels for all the speakers from by clicking on the following link:
 
 https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/vox1_meta.csv
+
 and put it in 'data' folder.
 
 ## Installation
