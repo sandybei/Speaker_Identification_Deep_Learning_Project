@@ -7,6 +7,15 @@ functions.py
 .vscode/
 __pycache__/
 predict.py
+explore_data.py
+audio_analysis.py
+cnn.py
+evaluate.py
+preprocess_audio.py
+model.h5
+process_files.py
+plots
+
 
 # remove all images from test set 
 data/test/
