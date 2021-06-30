@@ -7,8 +7,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
-from tensorflow.python.keras.layers.normalization import BatchNormalization
-
 
 # get dataset directories
 train_dir = os.path.join('data', 'train')
