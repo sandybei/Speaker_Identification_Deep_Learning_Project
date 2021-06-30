@@ -26,10 +26,11 @@ $ cat vox1_dev* > vox1_dev_wav.zip
 
 3. Unzip vox1_dev_wav.zip file inside 'data' folder:
 
-### Download metadata
+### Download Μetadata
 Download a file with full names, nationality and gender labels for all the speakers from by clicking on the following link:
 
 https://www.robots.ox.ac.uk/~vgg/data/voxceleb/meta/vox1_meta.csv
+and put it in 'data' folder.
 
 ## Installation
 
@@ -56,7 +57,7 @@ Follow the next steps to generate results:
 Run the following command to extract a VoxCeleb1 subset that will be used for classification:
 
 ```
-$ python file_preprocess.py
+$ python process_files.py
 ```
 ### 2. Data Exploration
 Run the following command to visualize information about the dataset:
@@ -65,7 +66,7 @@ $ python data_explore.py
 ```
 ### 3. Data Preprocessing
 File 'audio_analysis' contains functions for audio signal processing and their conversion to audio spectrograms.
-Run the following command to create directories of spectrogram images to be used for training:
+Run the following preprocess audio and create 3 directories of spectrogram images to be used for training and validation:
 ```
 $ python preprocess_audio.py
 ```
