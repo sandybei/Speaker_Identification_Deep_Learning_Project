@@ -15,6 +15,7 @@ preprocess_audio.py
 model.h5
 process_files.py
 plots
+old_readme.md
 
 
 # remove all images from test set 
