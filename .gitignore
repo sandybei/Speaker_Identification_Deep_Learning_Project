@@ -1,10 +1,37 @@
 # files and directories to ignore
 
 data/voxceleb_data/
-data/test
 data/train
 data/val
 functions.py
 .vscode/
 __pycache__/
 predict.py
+
+# remove all images from test set 
+data/test/*
+
+# except for images to be used for predictions
+!data/test/id10203/
+data/test/id10203/*
+!data/test/id10203/15.png
+
+!data/test/id10343/
+data/test/id10343/*
+!data/test/id10343/41.png
+
+!data/test/id10397/
+data/test/id10397/*
+!data/test/id10397/5.png
+
+!data/test/id10710/
+data/test/id10710/*
+!data/test/id10710/0.png
+
+!data/test/id11184/
+data/test/id11184/*
+!data/test/id11184/11.png
+
+!data/test/id10945/
+data/test/id10945/*
+!data/test/id10945/10.png
